@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic; // Importera för List<T>
+using System.Linq;
 using System.Collections.ObjectModel; // För ObservableCollection  
 using System.Windows; // För MessageBox och andra WPF-komponenter
 using System.Windows.Input;//För Icommand   
@@ -6,8 +8,12 @@ using YourNamespace;
 
 namespace FiveInARow // Namn på projektet
 {
+
     public class MainViewModel
     {
+        public string AlgorithmType { get; set; }
+        //skapar en instans av klassen Random
+        private Random random = new Random();
         // En ObservableCollection av Cell-objekt som representerar varje cell i spelbrädet.
         public ObservableCollection<Cell> Cells { get; set; }
 
@@ -82,6 +88,7 @@ namespace FiveInARow // Namn på projektet
                     {
                         //Om spelaren vill spela igen så återställs brädet
                         ResetBoard();
+                        InitializeGame();// Kör spelets första dialogruta igen
                     }
                     else
                     {
@@ -205,21 +212,333 @@ namespace FiveInARow // Namn på projektet
             return true;
         }
 
+        // Mycket simpel algoritm där PC kommer välja den första lediga cellen
+        //private void DoComputerMove(string mark)
+        //{
+        //    
+        //    //Foreach loop som kollar alla celler i samlingen Cells
+        //    foreach (var cell in Cells)
+        //    {
+        //        // om cellen är ledig, sätt värdet till mark och bryt loopen
+        //        if (cell.Value == "-")
+        //        {
+        //            //Om cellen är ledig så sätts värdet till mark
+        //            cell.Value = mark;
+        //            break;
+        //        }
+        //    }
+        //}
 
+        // Algoritm som slumpar fram en ledig cell, lite mer avancerad än den ovan
+        //private void DoComputerMove(string mark)
+        //{
+        //    // Skapar en lista för att lagra alla lediga celler
+        //    List<Cell> availableCells = new List<Cell>();
+
+        //    // Loopar igenom alla celler för att hitta de som är lediga ("-")
+        //    foreach (var cell in Cells)
+        //    {
+        //        if (cell.Value == "-")
+        //        {
+        //            availableCells.Add(cell);
+        //        }
+        //    }
+
+        //    // Kontrollerar om det finns några lediga celler
+        //    if (availableCells.Any())
+        //    {
+        //        // Väljer en slumpmässig cell från listan av tillgängliga celler
+        //        int index = random.Next(availableCells.Count);
+        //        Cell randomCell = availableCells[index];
+
+        //        // Sätter värdet på den slumpmässigt valda cellen till datorns mark ("O" eller "X")
+        //        randomCell.Value = mark;
+        //    }
+        //}
+
+        //Algoritm som är än mer utvecklad än de föregående.
+        // Den kollar om spelaren är på väg att vinna och blockerar i så fall
+        // Om inte, så väljer den en slumpmässig cell
+        //private void DoComputerMove(string mark)
+        //{
+        //    Cell winningCell = FindCellToWin(mark);
+        //    if (winningCell != null)
+        //    {
+        //        winningCell.Value = mark;
+        //        return;
+        //    }
+        //    // Försöker blockera spelaren från att vinna
+        //    Cell cellToBlock = FindCellToBlock(mark == "X" ? "O" : "X");
+        //    if (cellToBlock != null)
+        //    {
+        //        cellToBlock.Value = mark;
+        //        return;
+        //    }
+
+        //    // Om ingen cell att blockera hittas, fortsätt med den ursprungliga strategin
+
+        //    // Skapar en lista för att lagra alla lediga celler
+        //    List<Cell> availableCells = new List<Cell>();
+
+        //    // Loopar igenom alla celler för att hitta de som är lediga ("-")
+        //    foreach (var cell in Cells)
+        //    {
+        //        if (cell.Value == "-")
+        //        {
+        //            availableCells.Add(cell);
+        //        }
+        //    }
+
+        //    // Kontrollerar om det finns några lediga celler
+        //    if (availableCells.Any())
+        //    {
+        //        // Väljer en slumpmässig cell från listan av tillgängliga celler
+        //        int index = random.Next(availableCells.Count);
+        //        Cell randomCell = availableCells[index];
+
+        //        // Sätter värdet på den slumpmässigt valda cellen till datorns mark ("O" eller "X")
+        //        randomCell.Value = mark;
+        //    }
+        //}
         private void DoComputerMove(string mark)
         {
-            // Mycket simpel algoritm där PC kommer välja den första lediga cellen
-            //Foreach loop som kollar alla celler i samlingen Cells
-            foreach (var cell in Cells)
+            if (AlgorithmType == "Easy")
             {
-                // om cellen är ledig, sätt värdet till mark och bryt loopen
-                if (cell.Value == "-")
+                foreach (var cell in Cells)
                 {
-                    //Om cellen är ledig så sätts värdet till mark
-                    cell.Value = mark;
-                    break;
+                    // om cellen är ledig, sätt värdet till mark och bryt loopen
+                    if (cell.Value == "-")
+                    {
+                        //Om cellen är ledig så sätts värdet till mark
+                        cell.Value = mark;
+                        break;
+                    }
                 }
             }
+            else if (AlgorithmType == "Medium")
+            {
+                List<Cell> availableCells = new List<Cell>();
+
+                // Loopar igenom alla celler för att hitta de som är lediga ("-")
+                foreach (var cell in Cells)
+                {
+                    if (cell.Value == "-")
+                    {
+                        availableCells.Add(cell);
+                    }
+                }
+
+                // Kontrollerar om det finns några lediga celler
+                if (availableCells.Any())
+                {
+                    // Väljer en slumpmässig cell från listan av tillgängliga celler
+                    int index = random.Next(availableCells.Count);
+                    Cell randomCell = availableCells[index];
+
+                    // Sätter värdet på den slumpmässigt valda cellen till datorns mark ("O" eller "X")
+                    randomCell.Value = mark;
+                }
+            }
+            else if (AlgorithmType == "Hard")
+            {
+                Cell winningCell = FindCellToWin(mark);
+                if (winningCell != null)
+                {
+                    winningCell.Value = mark;
+                    return;
+                }
+                // Försöker blockera spelaren från att vinna
+                Cell cellToBlock = FindCellToBlock(mark == "X" ? "O" : "X");
+                if (cellToBlock != null)
+                {
+                    cellToBlock.Value = mark;
+                    return;
+                }
+
+                // Om ingen cell att blockera hittas, fortsätt med den ursprungliga strategin
+
+                // Skapar en lista för att lagra alla lediga celler
+                List<Cell> availableCells = new List<Cell>();
+
+                // Loopar igenom alla celler för att hitta de som är lediga ("-")
+                foreach (var cell in Cells)
+                {
+                    if (cell.Value == "-")
+                    {
+                        availableCells.Add(cell);
+                    }
+                }
+
+                // Kontrollerar om det finns några lediga celler
+                if (availableCells.Any())
+                {
+                    // Väljer en slumpmässig cell från listan av tillgängliga celler
+                    int index = random.Next(availableCells.Count);
+                    Cell randomCell = availableCells[index];
+
+                    // Sätter värdet på den slumpmässigt valda cellen till datorns mark ("O" eller "X")
+                    randomCell.Value = mark;
+                }
+            }
+            // ... din tidigare kod ...
+        }
+
+
+        private Cell FindCellToBlock(string opponentMark)
+        {
+            // Loopar igenom varje rad på planen (antalet rader är 5)
+            for (int row = 0; row < 5; row++)
+            {
+                // Loopar igenom varje kolumn på planen (antalet kolumner är 5)
+                for (int col = 0; col < 5; col++)
+                {
+                    // Kollar i horisontell riktning om det finns en cell att blockera
+                    Cell cell = CheckDirectionForBlocking(row, col, 0, 1, opponentMark, WinLength);
+                    if (cell != null) return cell; // Om en cell hittas, returneras den direkt
+
+                    // Kollar i vertikal riktning om det finns en cell att blockera
+                    cell = CheckDirectionForBlocking(row, col, 1, 0, opponentMark, WinLength);
+                    if (cell != null) return cell; // Om en cell hittas, returneras den direkt
+
+                    // Kollar i diagonal riktning åt höger om det finns en cell att blockera
+                    cell = CheckDirectionForBlocking(row, col, 1, 1, opponentMark, WinLength);
+                    if (cell != null) return cell; // Om en cell hittas, returneras den direkt
+
+                    // Kollar i diagonal riktning åt vänster om det finns en cell att blockera
+                    cell = CheckDirectionForBlocking(row, col, 1, -1, opponentMark, WinLength);
+                    if (cell != null) return cell; // Om en cell hittas, returneras den direkt
+                }
+            }
+
+            // Om ingen cell hittas att blockera, returneras null
+            return null;
+        }
+
+
+        private Cell CheckDirectionForBlocking(int startRow, int startCol, int dRow, int dCol, string opponentMark, int winLength)
+        {
+            // Initierar en räknare för att hålla koll på antalet motståndarmarkörer i en given riktning
+            int count = 0;
+
+            // Initierar en variabel för att hålla koll på den tomma cellen i en given riktning
+            Cell emptyCell = null;
+
+            // Loopar genom antalet celler specificerat i winLength (3, 4 eller 5)
+            for (int i = 0; i < winLength; i++)
+            {
+                // Beräknar den aktuella raden och kolumnen baserat på startpunkten och den givna riktningen (dRow, dCol)
+                int row = startRow + dRow * i;
+                int col = startCol + dCol * i;
+
+                // Kontrollerar om den beräknade raden och kolumnen är utanför brädet
+                if (row < 0 || row >= 5 || col < 0 || col >= 5)
+                {
+                    return null; // Om så är fallet, returneras null
+                }
+
+                // Hämtar cellen vid den beräknade positionen (row, col)
+                Cell cell = Cells[row * 5 + col];
+
+                // Kollar om cellens värde matchar motståndarens märke
+                if (cell.Value == opponentMark)
+                {
+                    count++; // Ökar räknaren om det gör det
+                }
+                // Kollar om cellen är tom
+                else if (cell.Value == "-")
+                {
+                    // Lagrar den tomma cellen om ingen tidigare tom cell har lagrats
+                    if (emptyCell == null)
+                    {
+                        emptyCell = cell;
+                    }
+                    else
+                    {
+                        return null; // Mer än en tom cell i sekvensen, kan inte blockera
+                    }
+                }
+                else
+                {
+                    return null; // Cellen innehåller datorns egen markör, så sekvensen kan inte blockeras
+                }
+            }
+
+            // Kollar om antalet motståndarmarkörer är ett mindre än winLength och om det finns en tom cell
+            if (count == winLength - 1 && emptyCell != null)
+            {
+                return emptyCell; // Returnerar den tomma cellen för att blockera
+            }
+
+            // Om ingen lämplig cell för blockering hittas, returneras null
+            return null;
+        }
+
+        private Cell FindCellToWin(string computerMark)
+        {
+            for (int row = 0; row < 5; row++)
+            {
+                for (int col = 0; col < 5; col++)
+                {
+                    // Kontrollerar olika riktningar för att se om det finns en vinstmöjlighet
+                    Cell cell = CheckDirectionForWinning(row, col, 0, 1, computerMark, 5); // Horisontellt
+                    if (cell != null) return cell;
+
+                    cell = CheckDirectionForWinning(row, col, 1, 0, computerMark, 5); // Vertikalt
+                    if (cell != null) return cell;
+
+                    cell = CheckDirectionForWinning(row, col, 1, 1, computerMark, 5); // Diagonalt (nedåt)
+                    if (cell != null) return cell;
+
+                    cell = CheckDirectionForWinning(row, col, 1, -1, computerMark, 5); // Diagonalt (uppåt)
+                    if (cell != null) return cell;
+                }
+            }
+            return null;
+        }
+        private Cell CheckDirectionForWinning(int startRow, int startCol, int dRow, int dCol, string computerMark, int winLength)
+        {
+            int count = 0;
+            Cell emptyCell = null;
+
+            for (int i = 0; i < winLength; i++)
+            {
+                int row = startRow + dRow * i;
+                int col = startCol + dCol * i;
+
+                if (row < 0 || row >= 5 || col < 0 || col >= 5)
+                {
+                    return null;
+                }
+
+                Cell cell = Cells[row * 5 + col];
+
+                if (cell.Value == computerMark)
+                {
+                    count++;
+                }
+                else if (cell.Value == "-")
+                {
+                    if (emptyCell == null)
+                    {
+                        emptyCell = cell;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+            if (count == winLength - 1 && emptyCell != null)
+            {
+                return emptyCell; // Returnera den tomma cellen för att vinna
+            }
+
+            return null;
         }
         private void InitializeGame()
         {
@@ -241,11 +560,21 @@ namespace FiveInARow // Namn på projektet
                 MessageBox.Show("Inget val gjordes. Spelet avslutas.");
                 Application.Current.Shutdown();
             }
+            if (customMessageBox.EasyRadio.IsChecked == true)
+            {
+                AlgorithmType = "Easy";
+            }
+            else if (customMessageBox.MediumRadio.IsChecked == true)
+            {
+                AlgorithmType = "Medium";
+            }
+            else if (customMessageBox.HardRadio.IsChecked == true)
+            {
+                AlgorithmType = "Hard";
+            }
+
         }
        
-
-
-    
         
     }
 

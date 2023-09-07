@@ -1,43 +1,69 @@
 ﻿<Window x:Class="YourNamespace.CustomMessageBox"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Välj motståndare" Height="200" Width="400">
-    <Grid>
+        Title="Välj motståndare" Height="400" Width="800">
+    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
         <!-- StackPanel används för att organisera olika kontroller vertikalt -->
         <StackPanel>
             <!-- TextBlock för att visa huvudfrågan om typ av motståndare -->
             <TextBlock Text="Vill du spela mot en vän eller mot AI?" 
                        VerticalAlignment="Center" 
-                       HorizontalAlignment="Center"/>
+                       HorizontalAlignment="Center" 
+                       FontSize="24"/>
 
             <!-- Horisontell StackPanel för att placera knappar sida vid sida -->
             <StackPanel Orientation="Horizontal" 
                         VerticalAlignment="Bottom" 
                         HorizontalAlignment="Center">
-                <!-- Knapp för att välja att spela mot en vän -->
                 <Button Content="Vän" 
                         Click="FriendButton_Click" 
-                        Margin="10"/>
-
-                <!-- Knapp för att välja att spela mot AI -->
+                        Margin="10" 
+                        Height="60" Width="120"
+                        FontSize="18"/>
                 <Button Content="AI" 
                         Click="AIButton_Click" 
-                        Margin="10"/>
+                        Margin="10" 
+                        Height="60" Width="120"
+                        FontSize="18"/>
             </StackPanel>
 
             <!-- TextBlock för att förtydliga att användaren måste välja antal i rad för att vinna -->
             <TextBlock Text="Välj antal i rad för att vinna:"
                        VerticalAlignment="Center"
-                       HorizontalAlignment="Center"/>
+                       HorizontalAlignment="Center"
+                       FontSize="24"/>
 
             <!-- ComboBox för att låta användaren välja antal i rad -->
             <ComboBox Name="WinLengthComboBox" 
                       VerticalAlignment="Center" 
-                      HorizontalAlignment="Center">
+                      HorizontalAlignment="Center"
+                      Height="40" Width="100">
                 <ComboBoxItem Content="3"/>
                 <ComboBoxItem Content="4"/>
                 <ComboBoxItem Content="5"/>
             </ComboBox>
+
+            <!-- Horisontell StackPanel för att placera TextBlock och radioknappar sida vid sida -->
+            <StackPanel Orientation="Horizontal" 
+                        VerticalAlignment="Center" 
+                        HorizontalAlignment="Center">
+                <!-- TextBlock för att presentera radioknappval -->
+                <TextBlock Text="Välj svårighetsgrad:"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"
+                           FontSize="24"
+                           Margin="0,0,10,0"/>
+                <!-- Lägger till lite marginal till höger -->
+
+                <!-- Inre horisontell StackPanel för att placera radioknappar sida vid sida -->
+                <StackPanel Orientation="Horizontal" 
+                            VerticalAlignment="Center" 
+                            HorizontalAlignment="Center">
+                    <RadioButton Content="Lätt" Name="EasyRadio" FontSize="18" Margin="10" IsChecked="True"/>
+                    <RadioButton Content="Mellan" Name="MediumRadio" FontSize="18" Margin="10"/>
+                    <RadioButton Content="Svår" Name="HardRadio" FontSize="18" Margin="10"/>
+                </StackPanel>
+            </StackPanel>
         </StackPanel>
     </Grid>
 </Window>

@@ -3,24 +3,32 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:FiveInARow"
         Title="5 i rad" Height="300" Width="300">
-    <!-- Definierar en Grid-layout -->
     <Grid>
-        <!-- Definierar en ItemsControl som kommer att visa cellerna (som knappar) i vårt spelbräde. 
-            ItemsSource är bunden till en ObservableCollection av Cells i vår ViewModel. -->
         <ItemsControl ItemsSource="{Binding Cells}">
-            <!-- Specificerar layouten för objekten inuti ItemsControl. Vi använder UniformGrid med 5 rader och 5 kolumner -->
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <UniformGrid Rows="5" Columns="5"/>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
-            <!-- Definierar hur varje objekt (cell) ska visas inuti ItemsControl -->
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <!-- Skapar en knapp för varje cell, och binder dess Content och Command egenskaper till vår ViewModel.
-                        Content är binded till cellens Value ("X", "O" eller "-").
-                        Command är bunden till CellClickCommand i vår ViewModel, och CommandParameter är satt till den nuvarande cellen. -->
-                    <Button Content="{Binding Value}" Command="{Binding Path=DataContext.CellClickCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}"/>
+                    <Button Content="{Binding Value}" 
+                            Command="{Binding Path=DataContext.CellClickCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
+                            CommandParameter="{Binding}" 
+                            FontSize="60">
+                        <Button.Style>
+                            <Style TargetType="{x:Type Button}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Value}" Value="X">
+                                        <Setter Property="Foreground" Value="Red"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Value}" Value="O">
+                                        <Setter Property="Foreground" Value="Blue"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
