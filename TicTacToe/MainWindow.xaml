@@ -2,7 +2,8 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:FiveInARow"
-        Title="5 i rad" Height="300" Width="300">
+        Title="5 i rad" Height="800" Width="800"
+        Cursor="Hand">
     <Grid>
         <ItemsControl ItemsSource="{Binding Cells}">
             <ItemsControl.ItemsPanel>
@@ -14,16 +15,23 @@
                 <DataTemplate>
                     <Button Content="{Binding Value}" 
                             Command="{Binding Path=DataContext.CellClickCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
-                            CommandParameter="{Binding}" 
+                            CommandParameter="{Binding}"
                             FontSize="60">
                         <Button.Style>
                             <Style TargetType="{x:Type Button}">
+                                <!-- Default Background -->
+                                <Setter Property="Background" Value="#704214" />
+                                <!-- Mörkbrunt -->
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding Value}" Value="X">
                                         <Setter Property="Foreground" Value="Red"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding Value}" Value="O">
                                         <Setter Property="Foreground" Value="Blue"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsMarked}" Value="True">
+                                        <Setter Property="Background" Value="#D4BF9D"/>
+                                        <!-- Ljusare färg -->
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>

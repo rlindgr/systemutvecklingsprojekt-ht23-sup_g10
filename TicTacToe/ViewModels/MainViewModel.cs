@@ -54,6 +54,7 @@ namespace FiveInARow // Namn på projektet
                 string currentPlayerMark = IsPlayerXTurn ? "X" : "O";
                 cell.Value = IsPlayerXTurn ? "X" : "O";
                 IsPlayerXTurn = !IsPlayerXTurn;
+                cell.IsMarked = true;
 
 
                 // Implementerar kod för att kolla om någon har vunnit
@@ -153,6 +154,7 @@ namespace FiveInARow // Namn på projektet
             {
                 // Återställer värdet av varje cell till "-" vilket innebär att cellen är tom
                 cell.Value = "-";
+                cell.IsMarked = false;
             }
 
             // Återställer turordningen till spelaren "X"
@@ -309,8 +311,9 @@ namespace FiveInARow // Namn på projektet
                     // om cellen är ledig, sätt värdet till mark och bryt loopen
                     if (cell.Value == "-")
                     {
-                        //Om cellen är ledig så sätts värdet till mark
+                        // Om cellen är ledig så sätts värdet till mark
                         cell.Value = mark;
+                        cell.IsMarked = true;  // Sätt IsMarked till true för att ändra färg
                         break;
                     }
                 }
@@ -334,9 +337,8 @@ namespace FiveInARow // Namn på projektet
                     // Väljer en slumpmässig cell från listan av tillgängliga celler
                     int index = random.Next(availableCells.Count);
                     Cell randomCell = availableCells[index];
-
-                    // Sätter värdet på den slumpmässigt valda cellen till datorns mark ("O" eller "X")
                     randomCell.Value = mark;
+                    randomCell.IsMarked = true;  // Sätt IsMarked till true för att ändra färg
                 }
             }
             else if (AlgorithmType == "Hard")
@@ -345,13 +347,16 @@ namespace FiveInARow // Namn på projektet
                 if (winningCell != null)
                 {
                     winningCell.Value = mark;
+                    winningCell.IsMarked = true;  // Sätt IsMarked till true för att ändra färg
                     return;
                 }
+
                 // Försöker blockera spelaren från att vinna
                 Cell cellToBlock = FindCellToBlock(mark == "X" ? "O" : "X");
                 if (cellToBlock != null)
                 {
                     cellToBlock.Value = mark;
+                    cellToBlock.IsMarked = true;  // Sätt IsMarked till true för att ändra färg
                     return;
                 }
 
@@ -375,13 +380,12 @@ namespace FiveInARow // Namn på projektet
                     // Väljer en slumpmässig cell från listan av tillgängliga celler
                     int index = random.Next(availableCells.Count);
                     Cell randomCell = availableCells[index];
-
-                    // Sätter värdet på den slumpmässigt valda cellen till datorns mark ("O" eller "X")
                     randomCell.Value = mark;
+                    randomCell.IsMarked = true;  // Sätt IsMarked till true för att ändra färg
                 }
             }
-            // ... din tidigare kod ...
         }
+
 
 
         private Cell FindCellToBlock(string opponentMark)
