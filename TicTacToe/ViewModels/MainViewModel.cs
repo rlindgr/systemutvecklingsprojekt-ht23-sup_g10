@@ -208,7 +208,7 @@ namespace FiveInARow // Namn på projektet
             return true;
         }
 
-        
+
         private void DoComputerMove(string mark)
         {
             if (AlgorithmType == "Easy")
@@ -453,47 +453,64 @@ namespace FiveInARow // Namn på projektet
         }
         private void InitializeGame()
         {
-            // Skapar en instans av klassen CustomMessageBox
+            // Visa dialogrutan först
             var customMessageBox = new CustomMessageBox();
-
-            // If-sats som kollar om dialogrutan har visats
             if (customMessageBox.ShowDialog() == true)
             {
-                // Om dialogrutan har visats och användaren har gjort ett val,
-                // sätt IsComputerOpponent och WinLength till de värden som valdes i dialogrutan
+                // Sätt om det är en dator motståndare och vinstlängd baserat på användarens val i dialogrutan
                 IsComputerOpponent = customMessageBox.IsComputerOpponent;
                 WinLength = customMessageBox.WinLength;
+
+                // Avgör sedan vem som börjar
+                Random random = new Random();
+                int whoStarts = random.Next(0, 2);  // Detta kommer att returnera antingen 0 eller 1
+
+                if (whoStarts == 0)
+                {
+                    // Spelare 1 börjar
+                    IsPlayerXTurn = true;
+                }
+                else
+                {
+                    // Spelare 2 (eller datorn) börjar
+                    IsPlayerXTurn = false;
+
+                    // Om det är en dator motståndare, gör det första draget här
+                    if (IsComputerOpponent)
+                    {
+                        DoComputerMove("O");
+                        IsPlayerXTurn = !IsPlayerXTurn;
+                    }
+                }
+
+                // Sätt svårighetsgraden baserat på användarens val i dialogrutan
+                if (customMessageBox.EasyRadio.IsChecked == true)
+                {
+                    AlgorithmType = "Easy";
+                }
+                else if (customMessageBox.MediumRadio.IsChecked == true)
+                {
+                    AlgorithmType = "Medium";
+                }
+                else if (customMessageBox.HardRadio.IsChecked == true)
+                {
+                    AlgorithmType = "Hard";
+                }
             }
             else
             {
-                // Om dialogrutan stängs utan att ett val görs (t.ex. genom att trycka på "krysset"),
-                // avsluta applikationen
-                //string winnerText = "Datorn vann! Vill du spela igen?";
-                //WinnerAnnouncement winnerAnnouncement = new WinnerAnnouncement(winnerText);
-                //winnerAnnouncement.ShowDialog();
-
+                // Om dialogrutan stängs utan att ett val görs, avsluta spelet
                 string invalidInput = "Inget val gjordes. Spelet avslutas.";
                 InvalidInput invalidInputBox = new InvalidInput(invalidInput);
                 invalidInputBox.ShowDialog();
-                //MessageBox.Show("Inget val gjordes. Spelet avslutas.", "VARNING!");
-                //Application.Current.Shutdown();
             }
-            if (customMessageBox.EasyRadio.IsChecked == true)
-            {
-                AlgorithmType = "Easy";
-            }
-            else if (customMessageBox.MediumRadio.IsChecked == true)
-            {
-                AlgorithmType = "Medium";
-            }
-            else if (customMessageBox.HardRadio.IsChecked == true)
-            {
-                AlgorithmType = "Hard";
-            }
-
         }
-       
-        
+
+
+
+
+
+
     }
 
 }

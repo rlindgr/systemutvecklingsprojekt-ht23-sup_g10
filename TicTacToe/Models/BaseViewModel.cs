@@ -7,7 +7,9 @@ namespace FiveInARow
     // meddela när en egenskap (property) ändras. Detta är viktigt för 
     // data bindning i WPF, för att uppdatera UI när modellens data ändras.
     public class BaseViewModel : INotifyPropertyChanged
-    {
+    {       
+
+       
         // Händelse som används när en property ändras.
         public event PropertyChangedEventHandler PropertyChanged;
 
