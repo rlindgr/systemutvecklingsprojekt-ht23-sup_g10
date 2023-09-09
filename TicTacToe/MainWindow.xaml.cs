@@ -8,6 +8,8 @@ namespace FiveInARow
         // Konstruktor för MainWindow-klassen
         public MainWindow()
         {
+            this.Left = 600;  // x-koordinat
+            this.Top = 100;   // y-koordinat
             // Initialiserar komponenter, inklusive de som definieras i XAML.
             // Detta är en automagisk funktion som WPF genererar.
             InitializeComponent();

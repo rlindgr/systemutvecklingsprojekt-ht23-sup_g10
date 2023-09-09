@@ -5,6 +5,7 @@ using System.Collections.ObjectModel; // För ObservableCollection
 using System.Windows; // För MessageBox och andra WPF-komponenter
 using System.Windows.Input;//För Icommand   
 using YourNamespace;
+using TicTacToe;
 
 namespace FiveInARow // Namn på projektet
 {
@@ -44,88 +45,81 @@ namespace FiveInARow // Namn på projektet
 
             // Binder CellClickCommand till CellClick-metoden så att den anropas när en cell klickas på.
             CellClickCommand = new RelayCommand(CellClick);
-        }
-    
 
-    public void CellClick(object cellObj)
+        }
+
+
+        public void CellClick(object cellObj)
         {
             if (cellObj is Cell cell && cell.Value == "-")
             {
                 string currentPlayerMark = IsPlayerXTurn ? "X" : "O";
-                cell.Value = IsPlayerXTurn ? "X" : "O";
+                cell.Value = currentPlayerMark;
                 IsPlayerXTurn = !IsPlayerXTurn;
                 cell.IsMarked = true;
 
-
-                // Implementerar kod för att kolla om någon har vunnit
                 if (CheckForWin(currentPlayerMark))
                 {
-                    // MessageBox Som presenterar vinnaren och frågar om spelaren vill spela igen
-                    MessageBoxResult result = MessageBox.Show($"Vi har en vinnare! Spelaren med {currentPlayerMark} markören fick {WinLength} i rad och vinner därmed matchen! Vill du spela igen?", "Vinnare!", MessageBoxButton.YesNo);
+                    string winnerText = $"Spelaren med {currentPlayerMark} markören fick {WinLength} i rad och vinner därmed matchen!";
+                    WinnerAnnouncement winnerAnnouncement = new WinnerAnnouncement(winnerText);
+                    winnerAnnouncement.ShowDialog();
 
-                    //If sats som hanterar valet om spelaren vill spela igen eller avsluta spelet
-                    if (result == MessageBoxResult.Yes)
+                    if (winnerAnnouncement.Result == MessageBoxResult.Yes)
                     {
-                        
-                        ResetBoard(); // Återställer brädet om spelaren vill spela igen
-                       //Resetboard före InitializeGame, fu
-                        InitializeGame();// Kör spelets första dialogruta igen
+                        ResetBoard();
+                        InitializeGame();
                     }
                     else
                     {
                         Application.Current.Shutdown();
                     }
                     return;
-                }             
+                }
 
-                // Lägger till följande kod för att kolla om brädet är fullt och även alternativ
-                // för att starta om spelet eller avsluta det
                 if (IsBoardFull())
                 {
-                    //MessageBox om ingen vinner och brädet är fullt samt alternativ för att spela igen eller ej
-                    MessageBoxResult result = MessageBox.Show("Det blev oavgjort. Vill du spela igen?", "Oavgjort", MessageBoxButton.YesNo);
+                    string winnerText = "Det blev oavgjort. Vill du spela igen?";
+                    WinnerAnnouncement winnerAnnouncement = new WinnerAnnouncement(winnerText);
+                    winnerAnnouncement.ShowDialog();
 
-                    if (result == MessageBoxResult.Yes)
+                    if (winnerAnnouncement.Result == MessageBoxResult.Yes)
                     {
-                        //Om spelaren vill spela igen så återställs brädet
                         ResetBoard();
-                        InitializeGame();// Kör spelets första dialogruta igen
+                        InitializeGame();
                     }
                     else
                     {
-                        // Om spelar inte vill spela igen så avslutas spelet
                         Application.Current.Shutdown();
                     }
                 }
-                // ifsats som kollar om det är datorns tur och om det är datorns tur så anropas metoden DoComputerMove
+
                 if (IsComputerOpponent && !IsPlayerXTurn)
                 {
                     DoComputerMove("O");
-                    // Kollar om datorn vinner och presenterar en dialogruta med alternativ för att spela igen eller avsluta spelet
+
                     if (CheckForWin("O"))
                     {
-                        MessageBoxResult result = MessageBox.Show("Datorn vann! Vill du spela igen?", "Förlust", MessageBoxButton.YesNo);
+                        string winnerText = "Datorn vann! Vill du spela igen?";
+                        WinnerAnnouncement winnerAnnouncement = new WinnerAnnouncement(winnerText);
+                        winnerAnnouncement.ShowDialog();
 
-                        if (result == MessageBoxResult.Yes)
+                        if (winnerAnnouncement.Result == MessageBoxResult.Yes)
                         {
-                            ResetBoard();// Återställer brädet om spelaren vill spela igen
-
-                            InitializeGame();// Kör spelets första dialogruta igen
+                            ResetBoard();
+                            InitializeGame();
                         }
                         else
                         {
-                            // Avslutar spelet om spelaren inte vill spela igen
                             Application.Current.Shutdown();
                         }
                         return;
                     }
-                    // Ändrar vems tur det är att spela.
+
                     IsPlayerXTurn = !IsPlayerXTurn;
                 }
-
-
             }
         }
+
         // Metod för att kontrollera om brädet är fullt
         private bool IsBoardFull()
         {
@@ -214,94 +208,7 @@ namespace FiveInARow // Namn på projektet
             return true;
         }
 
-        // Mycket simpel algoritm där PC kommer välja den första lediga cellen
-        //private void DoComputerMove(string mark)
-        //{
-        //    
-        //    //Foreach loop som kollar alla celler i samlingen Cells
-        //    foreach (var cell in Cells)
-        //    {
-        //        // om cellen är ledig, sätt värdet till mark och bryt loopen
-        //        if (cell.Value == "-")
-        //        {
-        //            //Om cellen är ledig så sätts värdet till mark
-        //            cell.Value = mark;
-        //            break;
-        //        }
-        //    }
-        //}
-
-        // Algoritm som slumpar fram en ledig cell, lite mer avancerad än den ovan
-        //private void DoComputerMove(string mark)
-        //{
-        //    // Skapar en lista för att lagra alla lediga celler
-        //    List<Cell> availableCells = new List<Cell>();
-
-        //    // Loopar igenom alla celler för att hitta de som är lediga ("-")
-        //    foreach (var cell in Cells)
-        //    {
-        //        if (cell.Value == "-")
-        //        {
-        //            availableCells.Add(cell);
-        //        }
-        //    }
-
-        //    // Kontrollerar om det finns några lediga celler
-        //    if (availableCells.Any())
-        //    {
-        //        // Väljer en slumpmässig cell från listan av tillgängliga celler
-        //        int index = random.Next(availableCells.Count);
-        //        Cell randomCell = availableCells[index];
-
-        //        // Sätter värdet på den slumpmässigt valda cellen till datorns mark ("O" eller "X")
-        //        randomCell.Value = mark;
-        //    }
-        //}
-
-        //Algoritm som är än mer utvecklad än de föregående.
-        // Den kollar om spelaren är på väg att vinna och blockerar i så fall
-        // Om inte, så väljer den en slumpmässig cell
-        //private void DoComputerMove(string mark)
-        //{
-        //    Cell winningCell = FindCellToWin(mark);
-        //    if (winningCell != null)
-        //    {
-        //        winningCell.Value = mark;
-        //        return;
-        //    }
-        //    // Försöker blockera spelaren från att vinna
-        //    Cell cellToBlock = FindCellToBlock(mark == "X" ? "O" : "X");
-        //    if (cellToBlock != null)
-        //    {
-        //        cellToBlock.Value = mark;
-        //        return;
-        //    }
-
-        //    // Om ingen cell att blockera hittas, fortsätt med den ursprungliga strategin
-
-        //    // Skapar en lista för att lagra alla lediga celler
-        //    List<Cell> availableCells = new List<Cell>();
-
-        //    // Loopar igenom alla celler för att hitta de som är lediga ("-")
-        //    foreach (var cell in Cells)
-        //    {
-        //        if (cell.Value == "-")
-        //        {
-        //            availableCells.Add(cell);
-        //        }
-        //    }
-
-        //    // Kontrollerar om det finns några lediga celler
-        //    if (availableCells.Any())
-        //    {
-        //        // Väljer en slumpmässig cell från listan av tillgängliga celler
-        //        int index = random.Next(availableCells.Count);
-        //        Cell randomCell = availableCells[index];
-
-        //        // Sätter värdet på den slumpmässigt valda cellen till datorns mark ("O" eller "X")
-        //        randomCell.Value = mark;
-        //    }
-        //}
+        
         private void DoComputerMove(string mark)
         {
             if (AlgorithmType == "Easy")
@@ -561,8 +468,15 @@ namespace FiveInARow // Namn på projektet
             {
                 // Om dialogrutan stängs utan att ett val görs (t.ex. genom att trycka på "krysset"),
                 // avsluta applikationen
-                MessageBox.Show("Inget val gjordes. Spelet avslutas.");
-                Application.Current.Shutdown();
+                //string winnerText = "Datorn vann! Vill du spela igen?";
+                //WinnerAnnouncement winnerAnnouncement = new WinnerAnnouncement(winnerText);
+                //winnerAnnouncement.ShowDialog();
+
+                string invalidInput = "Inget val gjordes. Spelet avslutas.";
+                InvalidInput invalidInputBox = new InvalidInput(invalidInput);
+                invalidInputBox.ShowDialog();
+                //MessageBox.Show("Inget val gjordes. Spelet avslutas.", "VARNING!");
+                //Application.Current.Shutdown();
             }
             if (customMessageBox.EasyRadio.IsChecked == true)
             {

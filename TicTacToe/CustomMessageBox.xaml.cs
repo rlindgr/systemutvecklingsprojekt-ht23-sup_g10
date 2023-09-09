@@ -9,10 +9,14 @@ namespace YourNamespace
         public bool IsComputerOpponent { get; private set; }
         public int WinLength { get; private set; }
 
+
         // Konstruktor
         public CustomMessageBox()
         {
+
             InitializeComponent();
+            this.Left = 600;  // x-koordinat
+            this.Top = 300;   // y-koordinat
         }
 
         // Eventhandler för klick på "Vän"-knappen
@@ -54,5 +58,6 @@ namespace YourNamespace
             DialogResult = true;
             Close();
         }
+
     }
 }
