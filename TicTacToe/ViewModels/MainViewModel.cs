@@ -50,75 +50,94 @@ namespace FiveInARow // Namn på projektet
 
 
         public void CellClick(object cellObj)
+{
+    if (cellObj is Cell cell && cell.Value == "-")
+    {
+        string currentPlayerMark = IsPlayerXTurn ? "X" : "O";
+        cell.Value = currentPlayerMark;
+        IsPlayerXTurn = !IsPlayerXTurn;
+        cell.IsMarked = true;
+
+        if (CheckForWin(currentPlayerMark))
         {
-            if (cellObj is Cell cell && cell.Value == "-")
+            string winnerText = $"Spelaren med {currentPlayerMark} markören fick {WinLength} i rad och vinner därmed matchen!";
+            WinnerAnnouncement winnerAnnouncement = new WinnerAnnouncement(winnerText);
+            winnerAnnouncement.ShowDialog();
+
+            if (winnerAnnouncement.Result == MessageBoxResult.Yes)
             {
-                string currentPlayerMark = IsPlayerXTurn ? "X" : "O";
-                cell.Value = currentPlayerMark;
-                IsPlayerXTurn = !IsPlayerXTurn;
-                cell.IsMarked = true;
+                ResetBoard();
+                InitializeGame();
+            }
+            else
+            {
+                Application.Current.Shutdown();
+            }
+            return;
+        }
 
-                if (CheckForWin(currentPlayerMark))
-                {
-                    string winnerText = $"Spelaren med {currentPlayerMark} markören fick {WinLength} i rad och vinner därmed matchen!";
-                    WinnerAnnouncement winnerAnnouncement = new WinnerAnnouncement(winnerText);
-                    winnerAnnouncement.ShowDialog();
+        if (IsBoardFull())
+        {
+            string winnerText = "Det blev oavgjort. Vill du spela igen?";
+            WinnerAnnouncement winnerAnnouncement = new WinnerAnnouncement(winnerText);
+            winnerAnnouncement.ShowDialog();
 
-                    if (winnerAnnouncement.Result == MessageBoxResult.Yes)
-                    {
-                        ResetBoard();
-                        InitializeGame();
-                    }
-                    else
-                    {
-                        Application.Current.Shutdown();
-                    }
-                    return;
-                }
-
-                if (IsBoardFull())
-                {
-                    string winnerText = "Det blev oavgjort. Vill du spela igen?";
-                    WinnerAnnouncement winnerAnnouncement = new WinnerAnnouncement(winnerText);
-                    winnerAnnouncement.ShowDialog();
-
-                    if (winnerAnnouncement.Result == MessageBoxResult.Yes)
-                    {
-                        ResetBoard();
-                        InitializeGame();
-                    }
-                    else
-                    {
-                        Application.Current.Shutdown();
-                    }
-                }
-
-                if (IsComputerOpponent && !IsPlayerXTurn)
-                {
-                    DoComputerMove("O");
-
-                    if (CheckForWin("O"))
-                    {
-                        string winnerText = "Datorn vann! Vill du spela igen?";
-                        WinnerAnnouncement winnerAnnouncement = new WinnerAnnouncement(winnerText);
-                        winnerAnnouncement.ShowDialog();
-
-                        if (winnerAnnouncement.Result == MessageBoxResult.Yes)
-                        {
-                            ResetBoard();
-                            InitializeGame();
-                        }
-                        else
-                        {
-                            Application.Current.Shutdown();
-                        }
-                        return;
-                    }
-
-                    IsPlayerXTurn = !IsPlayerXTurn;
-                }
+            if (winnerAnnouncement.Result == MessageBoxResult.Yes)
+            {
+                ResetBoard();
+                InitializeGame();
+            }
+            else
+            {
+                Application.Current.Shutdown();
             }
         }
+
+        if (IsComputerOpponent && !IsPlayerXTurn)
+        {
+            DoComputerMove("O");
+
+            if (CheckForWin("O"))
+            {
+                string winnerText = "Datorn vann! Vill du spela igen?";
+                WinnerAnnouncement winnerAnnouncement = new WinnerAnnouncement(winnerText);
+                winnerAnnouncement.ShowDialog();
+
+                if (winnerAnnouncement.Result == MessageBoxResult.Yes)
+                {
+                    ResetBoard();
+                    InitializeGame();
+                }
+                else
+                {
+                    Application.Current.Shutdown();
+                }
+                return;
+            }
+
+            // Lägg till denna kontroll här för att checka om brädet är fullt även efter datorns drag
+            if (IsBoardFull())
+            {
+                string winnerText = "Det blev oavgjort. Vill du spela igen?";
+                WinnerAnnouncement winnerAnnouncement = new WinnerAnnouncement(winnerText);
+                winnerAnnouncement.ShowDialog();
+
+                if (winnerAnnouncement.Result == MessageBoxResult.Yes)
+                {
+                    ResetBoard();
+                    InitializeGame();
+                }
+                else
+                {
+                    Application.Current.Shutdown();
+                }
+            }
+
+            IsPlayerXTurn = !IsPlayerXTurn;
+        }
+    }
+}
+
 
         // Metod för att kontrollera om brädet är fullt
         private bool IsBoardFull()
@@ -465,23 +484,33 @@ namespace FiveInARow // Namn på projektet
                 Random random = new Random();
                 int whoStarts = random.Next(0, 2);  // Detta kommer att returnera antingen 0 eller 1
 
+                // Meddelande om vem som börjar
+                string startingPlayerMessage;
+
                 if (whoStarts == 0)
                 {
                     // Spelare 1 börjar
                     IsPlayerXTurn = true;
+                    startingPlayerMessage = "Spelare 1 börjar spelet";
                 }
                 else
                 {
                     // Spelare 2 (eller datorn) börjar
                     IsPlayerXTurn = false;
+                    startingPlayerMessage = "Spelare 2 börjar spelet";
 
                     // Om det är en dator motståndare, gör det första draget här
                     if (IsComputerOpponent)
                     {
+                        startingPlayerMessage = "Datorn börjar spelet";
                         DoComputerMove("O");
                         IsPlayerXTurn = !IsPlayerXTurn;
                     }
                 }
+
+                // Skapa och visa en instans av FirstMoveAnnouncer för att meddela vem som börjar
+                FirstMoveAnnouncer announcer = new FirstMoveAnnouncer(startingPlayerMessage);
+                announcer.Show();
 
                 // Sätt svårighetsgraden baserat på användarens val i dialogrutan
                 if (customMessageBox.EasyRadio.IsChecked == true)
@@ -505,6 +534,7 @@ namespace FiveInARow // Namn på projektet
                 invalidInputBox.ShowDialog();
             }
         }
+
 
 
 
