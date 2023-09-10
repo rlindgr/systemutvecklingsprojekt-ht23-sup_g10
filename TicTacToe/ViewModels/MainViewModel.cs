@@ -6,12 +6,16 @@ using System.Windows; // För MessageBox och andra WPF-komponenter
 using System.Windows.Input;//För Icommand   
 using YourNamespace;
 using TicTacToe;
+using System.Windows.Media;
+using TicTacToe.Views;
+using System.ComponentModel;
 
 namespace FiveInARow // Namn på projektet
 {
 
     public class MainViewModel
     {
+
         public string AlgorithmType { get; set; }
         //skapar en instans av klassen Random
         private Random random = new Random();
@@ -30,13 +34,10 @@ namespace FiveInARow // Namn på projektet
         // Ett heltal som håller reda på hur många markörer som krävs i rad för att vinna spelet.
         public int WinLength { get; set; }
 
+       
         // Konstruktor som kallas när en ny instans av MainViewModel skapas.
         public MainViewModel()
         {
-            // Anropar metoden för att initialisera spelet (visar upp dialogrutan där användaren väljer inställningar).
-            InitializeGame();
-
-            // Skapar en ny ObservableCollection och fyller den med 25 Cell-objekt, initialt satta till "-".
             Cells = new ObservableCollection<Cell>();
             for (int i = 0; i < 25; i++)
             {
@@ -45,23 +46,86 @@ namespace FiveInARow // Namn på projektet
 
             // Binder CellClickCommand till CellClick-metoden så att den anropas när en cell klickas på.
             CellClickCommand = new RelayCommand(CellClick);
+            // Anropar metoden för att initialisera spelet (visar upp dialogrutan där användaren väljer inställningar).
+            InitializeGame();
+
+            // Skapar en ny ObservableCollection och fyller den med 25 Cell-objekt, initialt satta till "-".
+
+           
+            
 
         }
-
+       
 
         public void CellClick(object cellObj)
-{
-    if (cellObj is Cell cell && cell.Value == "-")
-    {
-        string currentPlayerMark = IsPlayerXTurn ? "X" : "O";
-        cell.Value = currentPlayerMark;
-        IsPlayerXTurn = !IsPlayerXTurn;
-        cell.IsMarked = true;
-
-        if (CheckForWin(currentPlayerMark))
         {
-            string winnerText = $"Spelaren med {currentPlayerMark} markören fick {WinLength} i rad och vinner därmed matchen!";
-            WinnerAnnouncement winnerAnnouncement = new WinnerAnnouncement(winnerText);
+            MediaPlayer mediaPlayer = new MediaPlayer();
+
+            mediaPlayer.Open(new Uri("201806__fartheststar__poker_chips2.wav", UriKind.Relative));
+
+            mediaPlayer.Play();
+            if (cellObj is Cell cell && cell.Value == "-")
+            {
+                string currentPlayerMark = IsPlayerXTurn ? "X" : "O";
+                cell.Value = currentPlayerMark;
+                IsPlayerXTurn = !IsPlayerXTurn;
+                cell.IsMarked = true;
+
+                if (CheckForWin(currentPlayerMark))
+                {
+                    MediaPlayer mediaWin = new MediaPlayer();
+                    mediaWin.Open(new Uri("170583__audiosmedia__party-horn.wav", UriKind.Relative));
+
+                    mediaWin.Play();
+                    EndGame($"Spelaren med {currentPlayerMark} markören fick {WinLength} i rad och vinner därmed matchen!");
+                    return;
+                }
+
+                if (IsBoardFull())
+                {
+                    MediaPlayer mediaDraw = new MediaPlayer();
+                    mediaDraw.Open(new Uri("495541__matrixxx__retro-death.wav", UriKind.Relative));
+
+
+                    mediaDraw.Play();
+                    EndGame("Det blev oavgjort. Vill du spela igen?");
+                    return;
+                }
+
+                if (IsComputerOpponent && !IsPlayerXTurn)
+                {
+                    DoComputerMove("O");
+
+                    if (CheckForWin("O"))
+                    {
+                        MediaPlayer mediaLoss = new MediaPlayer();
+
+                        mediaLoss.Open(new Uri("572936__bloodpixelhero__error.wav", UriKind.Relative));
+
+                        mediaLoss.Play();
+                        EndGame("Datorn vann! Vill du spela igen?");
+                        return;
+                    }
+
+                    // Lägg till denna kontroll här för att checka om brädet är fullt även efter datorns drag
+                    if (IsBoardFull())
+                    {
+                        MediaPlayer mediaDraw = new MediaPlayer();
+                        mediaDraw.Open(new Uri("495541__matrixxx__retro-death.wav", UriKind.Relative));
+
+
+                        mediaDraw.Play();
+                        EndGame("Det blev oavgjort. Vill du spela igen?");
+                        return;
+                    }
+
+                    IsPlayerXTurn = !IsPlayerXTurn;
+                }
+            }
+        }
+
+        private void EndGame(string displayMessage){
+            WinnerAnnouncement winnerAnnouncement = new WinnerAnnouncement(displayMessage);
             winnerAnnouncement.ShowDialog();
 
             if (winnerAnnouncement.Result == MessageBoxResult.Yes)
@@ -73,70 +137,7 @@ namespace FiveInARow // Namn på projektet
             {
                 Application.Current.Shutdown();
             }
-            return;
         }
-
-        if (IsBoardFull())
-        {
-            string winnerText = "Det blev oavgjort. Vill du spela igen?";
-            WinnerAnnouncement winnerAnnouncement = new WinnerAnnouncement(winnerText);
-            winnerAnnouncement.ShowDialog();
-
-            if (winnerAnnouncement.Result == MessageBoxResult.Yes)
-            {
-                ResetBoard();
-                InitializeGame();
-            }
-            else
-            {
-                Application.Current.Shutdown();
-            }
-        }
-
-        if (IsComputerOpponent && !IsPlayerXTurn)
-        {
-            DoComputerMove("O");
-
-            if (CheckForWin("O"))
-            {
-                string winnerText = "Datorn vann! Vill du spela igen?";
-                WinnerAnnouncement winnerAnnouncement = new WinnerAnnouncement(winnerText);
-                winnerAnnouncement.ShowDialog();
-
-                if (winnerAnnouncement.Result == MessageBoxResult.Yes)
-                {
-                    ResetBoard();
-                    InitializeGame();
-                }
-                else
-                {
-                    Application.Current.Shutdown();
-                }
-                return;
-            }
-
-            // Lägg till denna kontroll här för att checka om brädet är fullt även efter datorns drag
-            if (IsBoardFull())
-            {
-                string winnerText = "Det blev oavgjort. Vill du spela igen?";
-                WinnerAnnouncement winnerAnnouncement = new WinnerAnnouncement(winnerText);
-                winnerAnnouncement.ShowDialog();
-
-                if (winnerAnnouncement.Result == MessageBoxResult.Yes)
-                {
-                    ResetBoard();
-                    InitializeGame();
-                }
-                else
-                {
-                    Application.Current.Shutdown();
-                }
-            }
-
-            IsPlayerXTurn = !IsPlayerXTurn;
-        }
-    }
-}
 
 
         // Metod för att kontrollera om brädet är fullt
@@ -169,9 +170,6 @@ namespace FiveInARow // Namn på projektet
                 cell.Value = "-";
                 cell.IsMarked = false;
             }
-
-            // Återställer turordningen till spelaren "X"
-            IsPlayerXTurn = true;
         }
 
         //Metoder för att kontrollera om någon har vunnit i någon riktning
@@ -230,6 +228,7 @@ namespace FiveInARow // Namn på projektet
 
         private void DoComputerMove(string mark)
         {
+           
             if (AlgorithmType == "Easy")
             {
                 foreach (var cell in Cells)
@@ -471,18 +470,34 @@ namespace FiveInARow // Namn på projektet
             return null;
         }
         private void InitializeGame()
+
         {
             // Visa dialogrutan först
             var customMessageBox = new CustomMessageBox();
             if (customMessageBox.ShowDialog() == true)
             {
+                // Sätt svårighetsgraden baserat på användarens val i dialogrutan
+                if (customMessageBox.EasyRadio.IsChecked == true)
+                {
+                    AlgorithmType = "Easy";
+                }
+                else if (customMessageBox.MediumRadio.IsChecked == true)
+                {
+                    AlgorithmType = "Medium";
+                }
+                else if (customMessageBox.HardRadio.IsChecked == true)
+                {
+                    AlgorithmType = "Hard";
+                }
                 // Sätt om det är en dator motståndare och vinstlängd baserat på användarens val i dialogrutan
                 IsComputerOpponent = customMessageBox.IsComputerOpponent;
                 WinLength = customMessageBox.WinLength;
 
                 // Avgör sedan vem som börjar
                 Random random = new Random();
-                int whoStarts = random.Next(0, 2);  // Detta kommer att returnera antingen 0 eller 1
+               
+                random.Next(0, 2);  // Detta kommer att returnera antingen 0 eller 1
+                int whoStarts = random.Next(0, 2);
 
                 // Meddelande om vem som börjar
                 string startingPlayerMessage;
@@ -504,27 +519,15 @@ namespace FiveInARow // Namn på projektet
                     {
                         startingPlayerMessage = "Datorn börjar spelet";
                         DoComputerMove("O");
-                        IsPlayerXTurn = !IsPlayerXTurn;
+                        IsPlayerXTurn = true;
                     }
                 }
 
                 // Skapa och visa en instans av FirstMoveAnnouncer för att meddela vem som börjar
                 FirstMoveAnnouncer announcer = new FirstMoveAnnouncer(startingPlayerMessage);
                 announcer.Show();
-
-                // Sätt svårighetsgraden baserat på användarens val i dialogrutan
-                if (customMessageBox.EasyRadio.IsChecked == true)
-                {
-                    AlgorithmType = "Easy";
-                }
-                else if (customMessageBox.MediumRadio.IsChecked == true)
-                {
-                    AlgorithmType = "Medium";
-                }
-                else if (customMessageBox.HardRadio.IsChecked == true)
-                {
-                    AlgorithmType = "Hard";
-                }
+               
+             
             }
             else
             {
@@ -533,16 +536,13 @@ namespace FiveInARow // Namn på projektet
                 InvalidInput invalidInputBox = new InvalidInput(invalidInput);
                 invalidInputBox.ShowDialog();
             }
+
+
         }
-
-
-
-
-
-
-
+        
+      
+        
     }
-
 }
 
 

@@ -37,6 +37,7 @@
                             </Style>
                         </Button.Style>
                     </Button>
+                    
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>

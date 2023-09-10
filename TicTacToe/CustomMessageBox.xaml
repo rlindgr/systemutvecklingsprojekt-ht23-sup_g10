@@ -6,32 +6,6 @@
         Background="#F5ECD4">
     <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
         <StackPanel Background="#D4BF9D">
-            <TextBlock Text="Vill du spela mot en vän eller mot AI?"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Center"
-                       FontSize="24"
-                       FontWeight="Bold"
-                       Foreground="#8B4513"/>
-
-            <StackPanel Orientation="Horizontal"
-                        VerticalAlignment="Bottom"
-                        HorizontalAlignment="Center">
-                <Button Content="Vän"
-                        Click="FriendButton_Click"
-                        Margin="10"
-                        Height="60" Width="120"
-                        FontSize="18"
-                        Background="#8B4513"
-                        Foreground="White"/>
-                <Button Content="AI"
-                        Click="AIButton_Click"
-                        Margin="10"
-                        Height="60" Width="120"
-                        FontSize="18"
-                        Background="#228B22"
-                        Foreground="White"/>
-            </StackPanel>
-
             <TextBlock Text="Välj antal i rad för att vinna:"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Center"
@@ -67,6 +41,32 @@
                     <RadioButton Content="Mellan" Name="MediumRadio" FontSize="18" Margin="10"/>
                     <RadioButton Content="Svår" Name="HardRadio" FontSize="18" Margin="10"/>
                 </StackPanel>
+            </StackPanel>
+
+            <TextBlock Text="Vill du spela mot en vän eller mot AI?"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       FontSize="24"
+                       FontWeight="Bold"
+                       Foreground="#8B4513"/>
+
+            <StackPanel Orientation="Horizontal"
+                        VerticalAlignment="Bottom"
+                        HorizontalAlignment="Center">
+                <Button Content="Vän"
+                        Click="FriendButton_Click"
+                        Margin="10"
+                        Height="60" Width="120"
+                        FontSize="18"
+                        Background="#8B4513"
+                        Foreground="White"/>
+                <Button Content="AI"
+                        Click="AIButton_Click"
+                        Margin="10"
+                        Height="60" Width="120"
+                        FontSize="18"
+                        Background="#228B22"
+                        Foreground="White"/>
             </StackPanel>
         </StackPanel>
     </Grid>
