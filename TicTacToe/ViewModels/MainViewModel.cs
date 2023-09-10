@@ -529,7 +529,7 @@ namespace FiveInARow // Namn på projektet
             else
             {
                 // Om dialogrutan stängs utan att ett val görs, avsluta spelet
-                string invalidInput = "Inget val gjordes. Spelet avslutas.";
+                string invalidInput = "Inget val gjordes. Spelet avslutas!";
                 InvalidInput invalidInputBox = new InvalidInput(invalidInput);
                 invalidInputBox.ShowDialog();
             }
