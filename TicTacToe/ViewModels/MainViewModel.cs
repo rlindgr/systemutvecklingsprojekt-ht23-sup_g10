@@ -33,8 +33,8 @@ namespace FiveInARow // Namn på projektet
 
         // Ett heltal som håller reda på hur många markörer som krävs i rad för att vinna spelet.
         public int WinLength { get; set; }
+        
 
-       
         // Konstruktor som kallas när en ny instans av MainViewModel skapas.
         public MainViewModel()
         {
@@ -51,7 +51,7 @@ namespace FiveInARow // Namn på projektet
 
             // Skapar en ny ObservableCollection och fyller den med 25 Cell-objekt, initialt satta till "-".
 
-           
+
             
 
         }

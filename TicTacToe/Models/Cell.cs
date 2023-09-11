@@ -48,5 +48,6 @@ namespace FiveInARow
                 OnPropertyChanged(nameof(CellColor));
             }
         }
+
     }
 }

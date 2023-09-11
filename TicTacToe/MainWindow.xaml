@@ -5,6 +5,12 @@
         Title="5 i rad" Height="800" Width="800"
         Cursor="Hand">
     <Grid>
+        <!-- Lägger till en volymslider i det övre högra hörnet -->
+        <Slider HorizontalAlignment="Right" VerticalAlignment="Top"
+                Minimum="0" Maximum="1" Value="{Binding Volume}"
+                Width="100" Height="20"/>
+
+        <!-- Ditt ursprungliga ItemsControl här -->
         <ItemsControl ItemsSource="{Binding Cells}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -37,7 +43,6 @@
                             </Style>
                         </Button.Style>
                     </Button>
-                    
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>

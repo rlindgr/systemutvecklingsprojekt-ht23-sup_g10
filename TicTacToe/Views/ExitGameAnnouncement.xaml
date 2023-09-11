@@ -30,7 +30,7 @@
                         Height="60" Width="120"
                         FontSize="24"
                         FontWeight="Bold"
-                        Background="#8B4513"
+                        Background="#228B22"
                         Foreground="#D4BF9D"/>
             </StackPanel>
         </StackPanel>

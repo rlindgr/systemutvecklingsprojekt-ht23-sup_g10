@@ -14,13 +14,16 @@ namespace TicTacToe.Views
         private void YesButton_Click(object sender, RoutedEventArgs e)
         {
             // Logik för att stänga programmet
-            Application.Current.Shutdown();
+            DialogResult = true;
+            Close();
         }
 
         private void NoButton_Click(object sender, RoutedEventArgs e)
         {
             // Logik för att inte stänga programmet och återgå till spelet
-            this.Close();
+            DialogResult = false;
+            Close();
         }
+
     }
 }

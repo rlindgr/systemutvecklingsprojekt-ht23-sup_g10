@@ -1,22 +1,36 @@
 ﻿using System.Windows;
+using System.ComponentModel;  // För CancelEventArgs
+using TicTacToe.Views;  // Lägg till detta för att använda ExitGameAnnouncement
 
 namespace FiveInARow
 {
-    // MainWindow är en delmängd av WPF-klass Window.
     public partial class MainWindow : Window
     {
-        // Konstruktor för MainWindow-klassen
         public MainWindow()
         {
             this.Left = 600;  // x-koordinat
             this.Top = 100;   // y-koordinat
-            // Initialiserar komponenter, inklusive de som definieras i XAML.
-            // Detta är en automagisk funktion som WPF genererar.
             InitializeComponent();
-           
-            // Sätter DataContext till en ny instans av MainViewModel.
-            // DataContext är det objekt som exponerar de egenskaper som binds till XAML.
+
             DataContext = new MainViewModel();
+
+            // Registrera Closing-eventet
+            this.Closing += MainWindow_Closing;
+        }
+
+        // Hanterare för Closing-eventet
+        private void MainWindow_Closing(object sender, CancelEventArgs e)
+        {
+            // Skapar och visar den anpassade dialogrutan
+            ExitGameAnnouncement dialog = new ExitGameAnnouncement("Vill du verkligen avsluta?");
+            dialog.ShowDialog();  // Detta gör att dialogrutan blir modal
+
+            // Om dialogrutan stängdes med 'Nej'-knappen kommer DialogResult vara null eller false
+            if (dialog.DialogResult != true)
+            {
+                // Avbryt stängning av programmet
+                e.Cancel = true;
+            }
         }
     }
 }

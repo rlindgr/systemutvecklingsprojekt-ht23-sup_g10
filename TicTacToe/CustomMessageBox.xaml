@@ -6,6 +6,7 @@
         Background="#F5ECD4">
     <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
         <StackPanel Background="#D4BF9D">
+            <!-- TextBlock för att välja antal i rad -->
             <TextBlock Text="Välj antal i rad för att vinna:"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Center"
@@ -13,6 +14,7 @@
                        FontWeight="Bold"
                        Foreground="#8B4513"/>
 
+            <!-- ComboBox för att välja antal i rad -->
             <ComboBox Name="WinLengthComboBox"
                       VerticalAlignment="Center"
                       HorizontalAlignment="Center"
@@ -24,6 +26,7 @@
                 <ComboBoxItem Cursor="Hand" Content="5"/>
             </ComboBox>
 
+            <!-- StackPanel och TextBlock för att välja svårighetsgrad -->
             <StackPanel Orientation="Horizontal"
                         VerticalAlignment="Center"
                         HorizontalAlignment="Center">
@@ -43,6 +46,7 @@
                 </StackPanel>
             </StackPanel>
 
+            <!-- TextBlock för att fråga om speltyp -->
             <TextBlock Text="Vill du spela mot en vän eller mot AI?"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Center"
@@ -50,6 +54,7 @@
                        FontWeight="Bold"
                        Foreground="#8B4513"/>
 
+            <!-- StackPanel och knappar för att välja speltyp -->
             <StackPanel Orientation="Horizontal"
                         VerticalAlignment="Bottom"
                         HorizontalAlignment="Center">
