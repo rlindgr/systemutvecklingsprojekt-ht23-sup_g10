@@ -7,18 +7,36 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Lägger till en volymslider och ikon i det övre högra hörnet -->
-        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
+        <!-- Ny StackPanel för att visa antal vinster -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center">
+            <TextBlock Text="Spelare X har vunnit: " />
+            <TextBlock Text="{Binding PlayerXWins}" />
+            <TextBlock Text=" gånger. Spelare O har vunnit: " />
+            <TextBlock Text="{Binding PlayerOWins}" />
+            <TextBlock Text=" gånger." />
+        </StackPanel>
+
+        <!-- Din ursprungliga StackPanel för volym -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
             <Image Source="C:\Users\eriks\source\repos\TicTacToe\TicTacToe\103711_louder_speaker_icon.png" Width="24" Height="24"/>
-            <Slider Minimum="0" Maximum="1" Value="{Binding Volume}"
-                    Width="100" Height="20"/>
+            <Slider Minimum="0" Maximum="1" Value="{Binding Volume}" Width="100" Height="20"/>
+        </StackPanel>
+
+        <!-- Lägger till en StackPanel för att indikera vems tur det är och andra kontroller -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left">
+            <TextBlock Text="Nuvarande Spelare: " Margin="5"/>
+            <TextBlock Text="{Binding CurrentPlayer}" Margin="5"/>
+            <Button Content="Öppna inställningar" Command="{Binding OpenSettingsCommand}" Margin="15,0,0,0"/>
+            <Button Content="Återställ vinsttal" Command="{Binding ResetWinsCommand}" Margin="15,0,0,0"/>
         </StackPanel>
 
         <!-- Ditt ursprungliga ItemsControl här -->
-        <ItemsControl Grid.Row="1" ItemsSource="{Binding Cells}">
+        <ItemsControl Grid.Row="3" ItemsSource="{Binding Cells}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <UniformGrid Rows="5" Columns="5"/>

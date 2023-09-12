@@ -13,7 +13,7 @@ using System.ComponentModel;
 namespace FiveInARow // Namn på projektet
 {
 
-    public class MainViewModel
+    public class MainViewModel: BaseViewModel
     {
 
         public string AlgorithmType { get; set; }
@@ -69,8 +69,76 @@ namespace FiveInARow // Namn på projektet
             
 
         }
-       
 
+
+        //public void CellClick(object cellObj)
+        //{
+        //    // Skapa en ny MediaPlayer-instans och öppna ljudfilen
+        //    MediaPlayer mediaPlayer = new MediaPlayer();
+        //    mediaPlayer.Open(new Uri("201806__fartheststar__poker_chips2.wav", UriKind.Relative));
+
+        //    // Sätt volymen på MediaPlayer-instansen
+        //    mediaPlayer.Volume = Volume;  // Volume är en property i samma klass, en double mellan 0 och 1
+
+        //    // Spela upp ljudet
+        //    mediaPlayer.Play();
+
+        //    if (cellObj is Cell cell && cell.Value == "-")
+        //    {
+        //        string currentPlayerMark = IsPlayerXTurn ? "X" : "O";
+        //        cell.Value = currentPlayerMark;
+        //        IsPlayerXTurn = !IsPlayerXTurn;
+        //        cell.IsMarked = true;
+
+        //        if (CheckForWin(currentPlayerMark))
+        //        {
+        //            MediaPlayer mediaWin = new MediaPlayer();
+        //            mediaWin.Open(new Uri("170583__audiosmedia__party-horn.wav", UriKind.Relative));
+        //            mediaWin.Volume = Volume;  // Sätt volymen här också
+        //            mediaWin.Play();
+        //            EndGame($"Spelaren med {currentPlayerMark} markören fick {WinLength} i rad och vinner därmed matchen!");
+        //            return;
+        //        }
+
+        //        if (IsBoardFull())
+        //        {
+        //            MediaPlayer mediaDraw = new MediaPlayer();
+        //            mediaDraw.Open(new Uri("495541__matrixxx__retro-death.wav", UriKind.Relative));
+        //            mediaDraw.Volume = Volume;  // Sätt volymen här också
+        //            mediaDraw.Play();
+        //            EndGame("Det blev oavgjort. Vill du spela igen?");
+        //            return;
+        //        }
+
+        //        if (IsComputerOpponent && !IsPlayerXTurn)
+        //        {
+        //            DoComputerMove("O");
+
+        //            if (CheckForWin("O"))
+        //            {
+        //                MediaPlayer mediaLoss = new MediaPlayer();
+        //                mediaLoss.Open(new Uri("572936__bloodpixelhero__error.wav", UriKind.Relative));
+        //                mediaLoss.Volume = Volume;  // Sätt volymen här också
+        //                mediaLoss.Play();
+        //                EndGame("Datorn vann! Vill du spela igen?");
+
+        //                return;
+        //            }
+
+        //            if (IsBoardFull())
+        //            {
+        //                MediaPlayer mediaDraw = new MediaPlayer();
+        //                mediaDraw.Open(new Uri("495541__matrixxx__retro-death.wav", UriKind.Relative));
+        //                mediaDraw.Volume = Volume;  // Sätt volymen här också
+        //                mediaDraw.Play();
+        //                EndGame("Det blev oavgjort. Vill du spela igen?");
+        //                return;
+        //            }
+
+        //            IsPlayerXTurn = !IsPlayerXTurn;
+        //        }
+        //    }
+        //}
         public void CellClick(object cellObj)
         {
             // Skapa en ny MediaPlayer-instans och öppna ljudfilen
@@ -78,7 +146,7 @@ namespace FiveInARow // Namn på projektet
             mediaPlayer.Open(new Uri("201806__fartheststar__poker_chips2.wav", UriKind.Relative));
 
             // Sätt volymen på MediaPlayer-instansen
-            mediaPlayer.Volume = Volume;  // Volume är en property i samma klass, en double mellan 0 och 1
+            mediaPlayer.Volume = Volume;
 
             // Spela upp ljudet
             mediaPlayer.Play();
@@ -94,8 +162,19 @@ namespace FiveInARow // Namn på projektet
                 {
                     MediaPlayer mediaWin = new MediaPlayer();
                     mediaWin.Open(new Uri("170583__audiosmedia__party-horn.wav", UriKind.Relative));
-                    mediaWin.Volume = Volume;  // Sätt volymen här också
+                    mediaWin.Volume = Volume;
                     mediaWin.Play();
+
+                    // Uppdatera antalet vinster för den aktuella spelaren
+                    if (currentPlayerMark == "X")
+                    {
+                        PlayerXWins++;
+                    }
+                    else
+                    {
+                        PlayerOWins++;
+                    }
+
                     EndGame($"Spelaren med {currentPlayerMark} markören fick {WinLength} i rad och vinner därmed matchen!");
                     return;
                 }
@@ -104,7 +183,7 @@ namespace FiveInARow // Namn på projektet
                 {
                     MediaPlayer mediaDraw = new MediaPlayer();
                     mediaDraw.Open(new Uri("495541__matrixxx__retro-death.wav", UriKind.Relative));
-                    mediaDraw.Volume = Volume;  // Sätt volymen här också
+                    mediaDraw.Volume = Volume;
                     mediaDraw.Play();
                     EndGame("Det blev oavgjort. Vill du spela igen?");
                     return;
@@ -118,7 +197,7 @@ namespace FiveInARow // Namn på projektet
                     {
                         MediaPlayer mediaLoss = new MediaPlayer();
                         mediaLoss.Open(new Uri("572936__bloodpixelhero__error.wav", UriKind.Relative));
-                        mediaLoss.Volume = Volume;  // Sätt volymen här också
+                        mediaLoss.Volume = Volume;
                         mediaLoss.Play();
                         EndGame("Datorn vann! Vill du spela igen?");
                         return;
@@ -128,7 +207,7 @@ namespace FiveInARow // Namn på projektet
                     {
                         MediaPlayer mediaDraw = new MediaPlayer();
                         mediaDraw.Open(new Uri("495541__matrixxx__retro-death.wav", UriKind.Relative));
-                        mediaDraw.Volume = Volume;  // Sätt volymen här också
+                        mediaDraw.Volume = Volume;
                         mediaDraw.Play();
                         EndGame("Det blev oavgjort. Vill du spela igen?");
                         return;
@@ -138,6 +217,34 @@ namespace FiveInARow // Namn på projektet
                 }
             }
         }
+        private int _playerXWins;
+        public int PlayerXWins
+        {
+            get { return _playerXWins; }
+            set
+            {
+                if (_playerXWins != value)
+                {
+                    _playerXWins = value;
+                    OnPropertyChanged(nameof(PlayerXWins));
+                }
+            }
+        }
+
+        private int _playerOWins;
+        public int PlayerOWins
+        {
+            get { return _playerOWins; }
+            set
+            {
+                if (_playerOWins != value)
+                {
+                    _playerOWins = value;
+                    OnPropertyChanged(nameof(PlayerOWins));
+                }
+            }
+        }
+
 
 
         private void EndGame(string displayMessage){
@@ -147,7 +254,7 @@ namespace FiveInARow // Namn på projektet
             if (winnerAnnouncement.Result == MessageBoxResult.Yes)
             {
                 ResetBoard();
-                InitializeGame();
+                //InitializeGame(); // Starta om spelet med samma inställningar som tidigare (svårighetsgrad, antal i rad) 
             }
             else
             {
