@@ -33,7 +33,21 @@ namespace FiveInARow // Namn på projektet
 
         // Ett heltal som håller reda på hur många markörer som krävs i rad för att vinna spelet.
         public int WinLength { get; set; }
-        
+        private double _volume = 0.5; // Standardvolymen är satt till 0.5
+
+        public double Volume
+        {
+            get { return _volume; }
+            set
+            {
+                if (value >= 0.0 && value <= 1.0)
+                {
+                    _volume = value;
+                    // Om du har en PropertyChanged-event, trigga den här.
+                    // PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Volume)));
+                }
+            }
+        }
 
         // Konstruktor som kallas när en ny instans av MainViewModel skapas.
         public MainViewModel()
@@ -59,11 +73,16 @@ namespace FiveInARow // Namn på projektet
 
         public void CellClick(object cellObj)
         {
+            // Skapa en ny MediaPlayer-instans och öppna ljudfilen
             MediaPlayer mediaPlayer = new MediaPlayer();
-
             mediaPlayer.Open(new Uri("201806__fartheststar__poker_chips2.wav", UriKind.Relative));
 
+            // Sätt volymen på MediaPlayer-instansen
+            mediaPlayer.Volume = Volume;  // Volume är en property i samma klass, en double mellan 0 och 1
+
+            // Spela upp ljudet
             mediaPlayer.Play();
+
             if (cellObj is Cell cell && cell.Value == "-")
             {
                 string currentPlayerMark = IsPlayerXTurn ? "X" : "O";
@@ -75,7 +94,7 @@ namespace FiveInARow // Namn på projektet
                 {
                     MediaPlayer mediaWin = new MediaPlayer();
                     mediaWin.Open(new Uri("170583__audiosmedia__party-horn.wav", UriKind.Relative));
-
+                    mediaWin.Volume = Volume;  // Sätt volymen här också
                     mediaWin.Play();
                     EndGame($"Spelaren med {currentPlayerMark} markören fick {WinLength} i rad och vinner därmed matchen!");
                     return;
@@ -85,8 +104,7 @@ namespace FiveInARow // Namn på projektet
                 {
                     MediaPlayer mediaDraw = new MediaPlayer();
                     mediaDraw.Open(new Uri("495541__matrixxx__retro-death.wav", UriKind.Relative));
-
-
+                    mediaDraw.Volume = Volume;  // Sätt volymen här också
                     mediaDraw.Play();
                     EndGame("Det blev oavgjort. Vill du spela igen?");
                     return;
@@ -99,21 +117,18 @@ namespace FiveInARow // Namn på projektet
                     if (CheckForWin("O"))
                     {
                         MediaPlayer mediaLoss = new MediaPlayer();
-
                         mediaLoss.Open(new Uri("572936__bloodpixelhero__error.wav", UriKind.Relative));
-
+                        mediaLoss.Volume = Volume;  // Sätt volymen här också
                         mediaLoss.Play();
                         EndGame("Datorn vann! Vill du spela igen?");
                         return;
                     }
 
-                    // Lägg till denna kontroll här för att checka om brädet är fullt även efter datorns drag
                     if (IsBoardFull())
                     {
                         MediaPlayer mediaDraw = new MediaPlayer();
                         mediaDraw.Open(new Uri("495541__matrixxx__retro-death.wav", UriKind.Relative));
-
-
+                        mediaDraw.Volume = Volume;  // Sätt volymen här också
                         mediaDraw.Play();
                         EndGame("Det blev oavgjort. Vill du spela igen?");
                         return;
@@ -123,6 +138,7 @@ namespace FiveInARow // Namn på projektet
                 }
             }
         }
+
 
         private void EndGame(string displayMessage){
             WinnerAnnouncement winnerAnnouncement = new WinnerAnnouncement(displayMessage);
