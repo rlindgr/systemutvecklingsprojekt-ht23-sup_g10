@@ -4,39 +4,67 @@
         xmlns:local="clr-namespace:FiveInARow"
         Title="5 i rad" Height="800" Width="800"
         Cursor="Hand">
+
+    <Window.Resources>
+        <Style x:Key="CustomButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#8B4513"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Height" Value="60"/>
+            <Setter Property="Width" Value="120"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="Margin" Value="10"/>
+        </Style>
+    </Window.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Ny StackPanel för att visa antal vinster -->
-        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center">
-            <TextBlock Text="Spelare X har vunnit: " />
-            <TextBlock Text="{Binding PlayerXWins}" />
-            <TextBlock Text=" gånger. Spelare O har vunnit: " />
-            <TextBlock Text="{Binding PlayerOWins}" />
-            <TextBlock Text=" gånger." />
-        </StackPanel>
-
-        <!-- Din ursprungliga StackPanel för volym -->
-        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+        <!-- StackPanel för volym -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
             <Image Source="C:\Users\eriks\source\repos\TicTacToe\TicTacToe\103711_louder_speaker_icon.png" Width="24" Height="24"/>
             <Slider Minimum="0" Maximum="1" Value="{Binding Volume}" Width="100" Height="20"/>
         </StackPanel>
 
-        <!-- Lägger till en StackPanel för att indikera vems tur det är och andra kontroller -->
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left">
-            <TextBlock Text="Nuvarande Spelare: " Margin="5"/>
-            <TextBlock Text="{Binding CurrentPlayer}" Margin="5"/>
-            <Button Content="Öppna inställningar" Command="{Binding OpenSettingsCommand}" Margin="15,0,0,0"/>
-            <Button Content="Återställ vinsttal" Command="{Binding ResetWinsCommand}" Margin="15,0,0,0"/>
-        </StackPanel>
+        <!-- Grid för att indikera vems tur det är, vinster och andra kontroller -->
+        <Grid Background="#D4BF9D" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
 
-        <!-- Ditt ursprungliga ItemsControl här -->
-        <ItemsControl Grid.Row="3" ItemsSource="{Binding Cells}">
+            <TextBlock FontWeight="Bold" Text="Nuvarande Spelare: " Margin="5" Foreground="#8B4513"/>
+            <TextBlock Text="{Binding CurrentPlayer}" Grid.Column="1" Margin="5" Foreground="#8B4513" FontSize="36" FontWeight="Bold"/>
+
+            <Button Content="Main Menu" Grid.Column="2" HorizontalAlignment="Left" Command="{Binding OpenSettingsCommand}" Style="{StaticResource CustomButtonStyle}" Margin="107,10,0,10" />
+            <Button Content="Reset Score" Grid.Column="2" HorizontalAlignment="Left" Command="{Binding ResetWinsCommand}" Style="{StaticResource CustomButtonStyle}" Margin="303,10,0,10" />
+
+            <Grid Grid.Column="4" VerticalAlignment="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Label x:Name="playerXWins" FontWeight="Bold" Content="0" Grid.Row="0" HorizontalAlignment="Left" Margin="128,-3,0,13" Foreground="SaddleBrown" FontSize="15"/>
+                <Label x:Name="playerOWins" FontWeight="Bold" Content="1" Grid.Row="0" HorizontalAlignment="Left" Margin="128,32,0,4" Foreground="SaddleBrown" FontSize="15" Grid.RowSpan="2"/>
+                <TextBlock FontWeight="Bold" Grid.Row="0" HorizontalAlignment="Left" Margin="5,5,0,5">
+                    <Run Foreground="SaddleBrown" Text="Spelare X har vunnit : "/>
+
+                </TextBlock>
+                <TextBlock FontWeight="Bold" Grid.Row="1" HorizontalAlignment="Right" Margin="5,0,41,10" Width="171">
+                    <Run Foreground="SaddleBrown" Text="Spelare O har vunnit : "/>
+
+                </TextBlock>
+            </Grid>
+        </Grid>
+
+        <!-- Ursprungligt ItemsControl här -->
+        <ItemsControl Grid.Row="2" ItemsSource="{Binding Cells}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <UniformGrid Rows="5" Columns="5"/>
@@ -50,9 +78,7 @@
                             FontSize="60">
                         <Button.Style>
                             <Style TargetType="{x:Type Button}">
-                                <!-- Default Background -->
                                 <Setter Property="Background" Value="#704214" />
-                                <!-- Mörkbrunt -->
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding Value}" Value="X">
                                         <Setter Property="Foreground" Value="Red"/>
@@ -62,7 +88,6 @@
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding IsMarked}" Value="True">
                                         <Setter Property="Background" Value="#D4BF9D"/>
-                                        <!-- Ljusare färg -->
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
