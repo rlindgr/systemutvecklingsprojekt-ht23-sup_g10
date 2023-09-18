@@ -12,7 +12,7 @@ namespace FiveInARow
             this.Top = 100;   // y-koordinat
             InitializeComponent();
 
-            DataContext = new MainViewModel();
+            DataContext = new GameViewModel();
 
             // Registrera Closing-eventet
             this.Closing += MainWindow_Closing;

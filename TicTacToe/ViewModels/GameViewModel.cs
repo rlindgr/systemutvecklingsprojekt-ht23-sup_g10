@@ -13,7 +13,7 @@ using System.ComponentModel;
 namespace FiveInARow // Namn på projektet
 {
 
-    public class MainViewModel: BaseViewModel
+    public class GameViewModel: BaseViewModel
     {
         private int _playerXWins;
         private int _playerOWins;
@@ -55,8 +55,8 @@ namespace FiveInARow // Namn på projektet
             }
         }
        
-        // Konstruktor som kallas när en ny instans av MainViewModel skapas.
-        public MainViewModel()
+        // Konstruktor som kallas när en ny instans av GameViewModel skapas.
+        public GameViewModel()
         {
             Cells = new ObservableCollection<Cell>();
             for (int i = 0; i < 25; i++)
