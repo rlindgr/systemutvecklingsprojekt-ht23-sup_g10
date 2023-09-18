@@ -15,9 +15,13 @@ namespace FiveInARow // Namn på projektet
 
     public class MainViewModel: BaseViewModel
     {
+        private int _playerXWins;
+        private int _playerOWins;
+        private string _currentPlayer;
         public ICommand OpenSettingsCommand { get; set; }
-        public ICommand ResetWinsCommand { get; set; }
+        public ICommand ResetWinsCommand { get; }
 
+        public ICommand CellClickCommand { get; set; }
         public string AlgorithmType { get; set; }
         //skapar en instans av klassen Random
         private Random random = new Random();
@@ -25,7 +29,7 @@ namespace FiveInARow // Namn på projektet
         public ObservableCollection<Cell> Cells { get; set; }
 
         // Ett ICommand-objekt som binder till ett klick-event i UI, så att vi kan hantera när en cell klickas på.
-        public ICommand CellClickCommand { get; set; }
+       
 
         // En bool som håller reda på om det är spelare X:s tur eller inte.
         private bool IsPlayerXTurn { get; set; } = true;
@@ -50,7 +54,7 @@ namespace FiveInARow // Namn på projektet
                 }
             }
         }
-
+       
         // Konstruktor som kallas när en ny instans av MainViewModel skapas.
         public MainViewModel()
         {
@@ -66,11 +70,121 @@ namespace FiveInARow // Namn på projektet
             InitializeGame();
 
             // Skapar en ny ObservableCollection och fyller den med 25 Cell-objekt, initialt satta till "-".
-
-
-
+            ResetWinsCommand = new RelayCommand(obj => ResetWins());
+            OpenSettingsCommand = new RelayCommand(OpenSettingsExecute);
+            CurrentPlayer = IsPlayerXTurn ? "X" : "O"; // Lägg till denna rad
         }
-     
+        public void ShowStartingPlayer(string startingPlayer)
+        {
+          
+            // Visar en dialogruta (eller vilken typ av UI-komponent du föredrar)
+            FirstMoveAnnouncer firstMoveAnnouncement = new FirstMoveAnnouncer(startingPlayer);
+            firstMoveAnnouncement.ShowDialog();
+        }
+
+        public void ResetGameBoard()
+        {
+            // Återställer alla celler till deras ursprungliga värden
+            foreach (var cell in Cells)
+            {
+                cell.Value = "-";
+                cell.IsMarked = false;
+            }
+
+            // Slumpmässigt avgör vem som börjar
+            Random random = new Random();
+            int whoStarts = 1;/*random.Next(0, 2);*/
+       
+
+            // Meddelande om vem som börjar
+            string startingPlayerMessage;
+
+            if (whoStarts == 0)
+            {
+                // Spelare 1 börjar
+                IsPlayerXTurn = true;
+                CurrentPlayer = "X";
+                startingPlayerMessage = "Spelare 1 börjar spelet";
+            }
+            else
+            {
+                // Spelare 2 (eller datorn) börjar
+                IsPlayerXTurn = false;
+                CurrentPlayer = "O";
+                startingPlayerMessage = "Spelare 2 börjar spelet";
+
+                // Om det är en dator motståndare, gör det första draget här
+                if (IsComputerOpponent)
+                {
+                    CurrentPlayer = "O";
+                    startingPlayerMessage = "Datorn börjar spelet";
+                    DoComputerMove("O");
+                    CurrentPlayer = "X";
+                    IsPlayerXTurn = true;
+                }
+            }
+
+            // Ytterligare logik för att återställa spelet kan läggas till här
+            ShowStartingPlayer(startingPlayerMessage); // Antag att ShowStartingPlayer är en metod som visar vem som börjar
+        }
+
+        private void ResetWins()
+        {
+            PlayerXWins = 0;
+            PlayerOWins = 0;
+            OnPropertyChanged(nameof(PlayerXWins));
+            OnPropertyChanged(nameof(PlayerOWins));
+        }
+        public int PlayerXWins
+        {
+            get { return _playerXWins; }
+            set
+            {
+                if (_playerXWins != value)
+                {
+                    _playerXWins = value;
+                    OnPropertyChanged(nameof(PlayerXWins));
+                }
+            }
+        }
+
+        public int PlayerOWins
+        {
+            get { return _playerOWins; }
+            set
+            {
+                if (_playerOWins != value)
+                {
+                    _playerOWins = value;
+                    OnPropertyChanged(nameof(PlayerOWins));
+                }
+            }
+        }
+        public string CurrentPlayer
+        {
+            get { return _currentPlayer; }
+            set
+            {
+                if (_currentPlayer != value)
+                {
+                    _currentPlayer = value;
+                    OnPropertyChanged(nameof(CurrentPlayer)); // Antar att du har en OnPropertyChanged-metod i BaseViewModel
+                }
+            }
+        }
+
+        private void OpenSettingsExecute(object obj)
+        {
+            //ResetBoard();
+
+            //InitializeGame();
+            //Cells = new ObservableCollection<Cell>();
+            //for (int i = 0; i < 25; i++)
+            //{
+            //    Cells.Add(new Cell { Value = "-" });
+            //}
+            ShowMainMenu();
+        }
         public void CellClick(object cellObj)
         {
             // Skapa en ny MediaPlayer-instans och öppna ljudfilen
@@ -78,7 +192,7 @@ namespace FiveInARow // Namn på projektet
             mediaPlayer.Open(new Uri("201806__fartheststar__poker_chips2.wav", UriKind.Relative));
 
             // Sätt volymen på MediaPlayer-instansen
-            mediaPlayer.Volume = Volume;  // Volume är en property i samma klass, en double mellan 0 och 1
+            mediaPlayer.Volume = Volume;
 
             // Spela upp ljudet
             mediaPlayer.Play();
@@ -86,16 +200,31 @@ namespace FiveInARow // Namn på projektet
             if (cellObj is Cell cell && cell.Value == "-")
             {
                 string currentPlayerMark = IsPlayerXTurn ? "X" : "O";
+
+                // Uppdaterar den nuvarande spelaren här
+                CurrentPlayer = currentPlayerMark;
+
                 cell.Value = currentPlayerMark;
-                IsPlayerXTurn = !IsPlayerXTurn;
                 cell.IsMarked = true;
 
                 if (CheckForWin(currentPlayerMark))
                 {
+                    if (currentPlayerMark == "X")
+                    {
+                        PlayerXWins++;
+                        OnPropertyChanged(nameof(PlayerXWins));
+                    }
+                    else if (currentPlayerMark == "O")
+                    {
+                        PlayerOWins++;
+                        OnPropertyChanged(nameof(PlayerOWins));
+                    }
+
                     MediaPlayer mediaWin = new MediaPlayer();
                     mediaWin.Open(new Uri("170583__audiosmedia__party-horn.wav", UriKind.Relative));
-                    mediaWin.Volume = Volume;  // Sätt volymen här också
+                    mediaWin.Volume = Volume;
                     mediaWin.Play();
+
                     EndGame($"Spelaren med {currentPlayerMark} markören fick {WinLength} i rad och vinner därmed matchen!");
                     return;
                 }
@@ -104,11 +233,17 @@ namespace FiveInARow // Namn på projektet
                 {
                     MediaPlayer mediaDraw = new MediaPlayer();
                     mediaDraw.Open(new Uri("495541__matrixxx__retro-death.wav", UriKind.Relative));
-                    mediaDraw.Volume = Volume;  // Sätt volymen här också
+                    mediaDraw.Volume = Volume;
                     mediaDraw.Play();
                     EndGame("Det blev oavgjort. Vill du spela igen?");
                     return;
                 }
+
+                // Ändrar spelartur här, efter att CurrentPlayer har uppdaterats
+                IsPlayerXTurn = !IsPlayerXTurn;
+
+                // Uppdaterar den nuvarande spelaren igen här, för nästa drag
+                CurrentPlayer = IsPlayerXTurn ? "X" : "O";
 
                 if (IsComputerOpponent && !IsPlayerXTurn)
                 {
@@ -116,12 +251,14 @@ namespace FiveInARow // Namn på projektet
 
                     if (CheckForWin("O"))
                     {
+                        PlayerOWins++;
+                        OnPropertyChanged(nameof(PlayerOWins));
+
                         MediaPlayer mediaLoss = new MediaPlayer();
                         mediaLoss.Open(new Uri("572936__bloodpixelhero__error.wav", UriKind.Relative));
-                        mediaLoss.Volume = Volume;  // Sätt volymen här också
+                        mediaLoss.Volume = Volume;
                         mediaLoss.Play();
                         EndGame("Datorn vann! Vill du spela igen?");
-
                         return;
                     }
 
@@ -129,32 +266,68 @@ namespace FiveInARow // Namn på projektet
                     {
                         MediaPlayer mediaDraw = new MediaPlayer();
                         mediaDraw.Open(new Uri("495541__matrixxx__retro-death.wav", UriKind.Relative));
-                        mediaDraw.Volume = Volume;  // Sätt volymen här också
+                        mediaDraw.Volume = Volume;
                         mediaDraw.Play();
                         EndGame("Det blev oavgjort. Vill du spela igen?");
                         return;
                     }
 
+                    // Ändrar spelartur här, efter att CurrentPlayer har uppdaterats
                     IsPlayerXTurn = !IsPlayerXTurn;
+
+                    // Uppdaterar den nuvarande spelaren igen här, för nästa drag
+                    CurrentPlayer = IsPlayerXTurn ? "X" : "O";
                 }
             }
         }
 
 
-        private void EndGame(string displayMessage){
+
+
+
+        private void ShowMainMenu()
+        {
+            // Här kan du bestämma vilken text som ska visas
+            string displayText = "Vill du gå till huvudmenyn?";
+
+            // Skapa ett nytt MainMenuClick-fönster och visa det
+            MainMenuClick mainMenuClick = new MainMenuClick(displayText);
+            mainMenuClick.ShowDialog();
+
+            // Hantera användarens val
+            if (mainMenuClick.Result == MessageBoxResult.Yes)
+            {
+                ResetBoard();
+                InitializeGame(); // Starta om spelet med samma inställningar som tidigare (svårighetsgrad, antal i rad)
+            }
+            else
+            {
+                // Gör något annat (t.ex. stänga programmet) när användaren klickar på "Avsluta" eller motsvarande
+                
+            }
+        }
+
+        private void EndGame(string displayMessage)
+        {
             WinnerAnnouncement winnerAnnouncement = new WinnerAnnouncement(displayMessage);
             winnerAnnouncement.ShowDialog();
 
             if (winnerAnnouncement.Result == MessageBoxResult.Yes)
             {
                 ResetBoard();
-                InitializeGame(); // Starta om spelet med samma inställningar som tidigare (svårighetsgrad, antal i rad) 
+                ResetGameBoard(); // Starta om spelet med samma inställningar som tidigare (svårighetsgrad, antal i rad) 
             }
-            else
+            else if (winnerAnnouncement.Result == MessageBoxResult.No)
             {
                 Application.Current.Shutdown();
             }
+            else if (winnerAnnouncement.Result == null)
+            {
+                // Om dialogrutan har stängts med krysset högst upp till höger
+                // gör ingenting (återgå till fullagd spelplan)
+            }
         }
+
 
 
         // Metod för att kontrollera om brädet är fullt
@@ -208,10 +381,14 @@ namespace FiveInARow // Namn på projektet
                        )
                     {
                         return true; // Returnerar true om en vinst har hittats
+                   
                     }
+
                 }
+
             }
             return false; // Returnerar false om ingen vinst har hittats
+
         }
 
         private bool CheckDirection(int startRow, int startCol, int dRow, int dCol, string mark, int winLength)
@@ -523,17 +700,20 @@ namespace FiveInARow // Namn på projektet
                 {
                     // Spelare 1 börjar
                     IsPlayerXTurn = true;
+                    CurrentPlayer = "X";  // Sätt CurrentPlayer till "X"
                     startingPlayerMessage = "Spelare 1 börjar spelet";
                 }
                 else
                 {
                     // Spelare 2 (eller datorn) börjar
                     IsPlayerXTurn = false;
+                    CurrentPlayer = "O";  // Sätt CurrentPlayer till "O"
                     startingPlayerMessage = "Spelare 2 börjar spelet";
 
                     // Om det är en dator motståndare, gör det första draget här
                     if (IsComputerOpponent)
                     {
+                        CurrentPlayer = "O";  // Sätt CurrentPlayer till "O"
                         startingPlayerMessage = "Datorn börjar spelet";
                         DoComputerMove("O");
                         IsPlayerXTurn = true;

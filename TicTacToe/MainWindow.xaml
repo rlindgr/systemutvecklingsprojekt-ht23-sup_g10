@@ -39,8 +39,9 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock FontWeight="Bold" Text="Nuvarande Spelare: " Margin="5" Foreground="#8B4513"/>
-            <TextBlock Text="{Binding CurrentPlayer}" Grid.Column="1" Margin="5" Foreground="#8B4513" FontSize="36" FontWeight="Bold"/>
+            <TextBlock FontWeight="Bold" Text="Spelare: " Margin="5" Foreground="#8B4513"/>
+            <TextBlock Text="{Binding CurrentPlayer}" Grid.Column="1" Margin="5" Foreground="#8B4513" FontSize="36" FontWeight="Bold" MinWidth="50"/>
+
 
             <Button Content="Main Menu" Grid.Column="2" HorizontalAlignment="Left" Command="{Binding OpenSettingsCommand}" Style="{StaticResource CustomButtonStyle}" Margin="107,10,0,10" />
             <Button Content="Reset Score" Grid.Column="2" HorizontalAlignment="Left" Command="{Binding ResetWinsCommand}" Style="{StaticResource CustomButtonStyle}" Margin="303,10,0,10" />
@@ -50,8 +51,9 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <Label x:Name="playerXWins" FontWeight="Bold" Content="0" Grid.Row="0" HorizontalAlignment="Left" Margin="128,-3,0,13" Foreground="SaddleBrown" FontSize="15"/>
-                <Label x:Name="playerOWins" FontWeight="Bold" Content="1" Grid.Row="0" HorizontalAlignment="Left" Margin="128,32,0,4" Foreground="SaddleBrown" FontSize="15" Grid.RowSpan="2"/>
+                <Label FontWeight="Bold" Content="{Binding PlayerXWins}" Grid.Row="0" HorizontalAlignment="Left" Margin="128,-3,0,13" Foreground="SaddleBrown" FontSize="15"/>
+                <Label FontWeight="Bold" Content="{Binding PlayerOWins}" Grid.Row="0" HorizontalAlignment="Left" Margin="128,32,0,4" Foreground="SaddleBrown" FontSize="15" Grid.RowSpan="2"/>
+
                 <TextBlock FontWeight="Bold" Grid.Row="0" HorizontalAlignment="Left" Margin="5,5,0,5">
                     <Run Foreground="SaddleBrown" Text="Spelare X har vunnit : "/>
 
@@ -63,7 +65,7 @@
             </Grid>
         </Grid>
 
-        <!-- Ursprungligt ItemsControl här -->
+        <!-- ItemsControl här -->
         <ItemsControl Grid.Row="2" ItemsSource="{Binding Cells}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -81,10 +83,10 @@
                                 <Setter Property="Background" Value="#704214" />
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding Value}" Value="X">
-                                        <Setter Property="Foreground" Value="Red"/>
+                                        <Setter Property="Foreground" Value="#F8350C"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding Value}" Value="O">
-                                        <Setter Property="Foreground" Value="Blue"/>
+                                        <Setter Property="Foreground" Value="Black"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding IsMarked}" Value="True">
                                         <Setter Property="Background" Value="#D4BF9D"/>

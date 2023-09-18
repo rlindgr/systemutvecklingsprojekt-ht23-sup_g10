@@ -21,7 +21,7 @@ namespace FiveInARow
         public event EventHandler CanExecuteChanged;
 
         // Metod för att avgöra om kommandot kan exekveras.
-        // Här är det alltid satt till true, vilket innebär att kommandot alltid kan köras.
+        // Här är det alltid satt till true, vilket innebär att kommandot alltid kan köras. 
         public bool CanExecute(object parameter)
         {
             return true;
