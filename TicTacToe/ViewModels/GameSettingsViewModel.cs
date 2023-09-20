@@ -24,7 +24,7 @@ namespace TicTacToe.ViewModels
         {
             
         }
-     
+
         public void InitializeGame()
         {
             var MainMenuView = new MainMenuView();

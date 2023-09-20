@@ -1,9 +1,15 @@
-﻿<Window x:Class="YourNamespace.MainMenuView"
+﻿<Window 
+    
+    x:Class="YourNamespace.MainMenuView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:YourNamespace"
+    xmlns:vm="clr-namespace:TicTacToe.ViewModels"
         Title="Välj motståndare" Height="400" Width="800"
         Cursor="Hand"
         Background="#F5ECD4">
+    <Window.DataContext>
+        <vm:MainMenuViewModel/>
+    </Window.DataContext>
     <Window.Resources>
         <local:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
     </Window.Resources>

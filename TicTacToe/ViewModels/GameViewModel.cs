@@ -90,6 +90,7 @@ namespace FiveInARow // Namn på projektet
                 gameSettings.IsPlayerXTurn = true;
             }
         }
+
         public void ShowStartingPlayer(string startingPlayer)
         {
           
