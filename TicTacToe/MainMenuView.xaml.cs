@@ -13,7 +13,6 @@ namespace YourNamespace
         public MainMenuView()
         {
             InitializeComponent();
-
         }
 
         // Eventhandler för klick på "Vän"-knappen
