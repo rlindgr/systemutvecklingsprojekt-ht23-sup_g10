@@ -3,37 +3,36 @@ using System.Windows.Controls;
 
 namespace YourNamespace
 {
-    public partial class CustomMessageBox : Window
+    public partial class MainMenuView : Window
     {
         // Property som håller information om vilken typ av motståndare och antal i rad som användaren har valt
         public bool IsComputerOpponent { get; private set; }
         public int WinLength { get; private set; }
 
         // Konstruktor
-        public CustomMessageBox()
+        public MainMenuView()
         {
             InitializeComponent();
+
         }
 
-        // Eventhandler för klick på "Vän"-knappen
-        private void FriendButton_Click(object sender, RoutedEventArgs e)
+
+        private void RadioButton_Checked(object sender, RoutedEventArgs e)
         {
-            // Ställ in att motståndaren inte är en dator
-            IsComputerOpponent = false;
+            RadioButton rb = sender as RadioButton;
+            if (rb.Content.ToString() == "Vän")
+            {
+                IsComputerOpponent = false;
+            }
+            else if (rb.Content.ToString() == "AI")
+            {
+                IsComputerOpponent = true;
+            }
 
             // Kalla på metoden för att stänga dialogrutan och sätta DialogResult
             OnOkClicked();
         }
 
-        // Eventhandler för klick på "AI"-knappen
-        private void AIButton_Click(object sender, RoutedEventArgs e)
-        {
-            // Ställ in att motståndaren är en dator
-            IsComputerOpponent = true;
-
-            // Kalla på metoden för att stänga dialogrutan och sätta DialogResult
-            OnOkClicked();
-        }
 
         // Metod för att ställa in DialogResult och stänga dialogrutan
         private void OnOkClicked()

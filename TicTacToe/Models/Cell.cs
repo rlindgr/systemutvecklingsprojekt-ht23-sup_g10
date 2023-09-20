@@ -8,7 +8,7 @@ namespace FiveInARow
         private string _value;
         public bool _isMarked;
         private string _cellColor; // Ny egenskap för att hålla färgenpå cellen.
-
+        public static string emptyCell = "-";
         // Property som andra klasser använder för att få eller sätta cellens värde.
         public string Value
         {
