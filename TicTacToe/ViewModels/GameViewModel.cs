@@ -18,9 +18,11 @@ namespace FiveInARow // Namn på projektet
 
     public class GameViewModel: BaseViewModel
     {
-       private Algorithm _algorithmType = GameSettings.Algorithm;
-        private int _winLength = GameSettings.WinLength;
-        private bool _isComputerOpponent = GameSettings.IsComputerOpponent;
+        private bool _isComputerOpponent;
+        private int _winLength;
+        private string _algorithmType;
+
+
         private int _playerXWins;
         private int _playerOWins;
        
@@ -53,16 +55,18 @@ namespace FiveInARow // Namn på projektet
 
         public GameSettingsViewModel gameSettings;
         // Konstruktor som kallas när en ny instans av GameViewModel skapas.
+
         public GameViewModel()
         {
 
-
             gameSettings =  new GameSettingsViewModel();
             gameSettings.InitializeGame();
-            
-            
 
-            Cells = new ObservableCollection<Cell>();
+            _algorithmType = gameSettings.AlgorithmType;
+            _winLength = gameSettings.WinLength;
+            _isComputerOpponent = gameSettings.IsComputerOpponent;
+
+        Cells = new ObservableCollection<Cell>();
             for (int i = 0; i < 25; i++)
             {
                 Cells.Add(new Cell { Value = Cell.emptyCell });
