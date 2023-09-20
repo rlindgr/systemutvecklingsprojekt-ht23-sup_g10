@@ -11,7 +11,9 @@
     <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
         <StackPanel Background="#D4BF9D">
             <TextBlock Text="Välj antal i rad för att vinna:" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="#8B4513"/>
-            <ComboBox Name="WinLengthComboBox" SelectedValue="{Binding GameSettings.WinLength}" VerticalAlignment="Center" HorizontalAlignment="Center" Height="40" Width="100" FontSize="24" Cursor="Hand">
+            <ComboBox Name="WinLengthComboBox" 
+                      SelectedValue="{Binding GameSettings.WinLength}" 
+                      VerticalAlignment="Center" HorizontalAlignment="Center" Height="40" Width="100" FontSize="24" Cursor="Hand">
                 <ComboBoxItem Cursor="Hand" Content="3"/>
                 <ComboBoxItem Cursor="Hand" Content="4"/>
                 <ComboBoxItem Cursor="Hand" Content="5"/>
@@ -26,9 +28,20 @@
             </StackPanel>
             <TextBlock Text="Vill du spela mot en vän eller mot AI?" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="#8B4513"/>
             <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Center">
-                <RadioButton Content="Vän" GroupName="GameType" IsChecked="{Binding GameSettings.IsComputerOpponent, Converter={StaticResource InverseBooleanConverter}}" Checked="RadioButton_Checked" Margin="10" Height="60" Width="120" FontSize="18" Background="#8B4513" Foreground="White"/>
-                <RadioButton Content="AI" GroupName="GameType" IsChecked="{Binding GameSettings.IsComputerOpponent}" Checked="RadioButton_Checked" Margin="10" Height="60" Width="120" FontSize="18" Background="#228B22" Foreground="White"/>
-
+                <Button Content="Vän"
+                        Click="FriendButton_Click"
+                        Margin="10"
+                        Height="60" Width="120"
+                        FontSize="18"
+                        Background="#8B4513"
+                        Foreground="White"/>
+                <Button Content="AI"
+                        Click="AIButton_Click"
+                        Margin="10"
+                        Height="60" Width="120"
+                        FontSize="18"
+                        Background="#228B22"
+                        Foreground="White"/>
             </StackPanel>
         </StackPanel>
     </Grid>

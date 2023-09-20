@@ -16,18 +16,21 @@ namespace YourNamespace
 
         }
 
-
-        private void RadioButton_Checked(object sender, RoutedEventArgs e)
+        // Eventhandler för klick på "Vän"-knappen
+        private void FriendButton_Click(object sender, RoutedEventArgs e)
         {
-            RadioButton rb = sender as RadioButton;
-            if (rb.Content.ToString() == "Vän")
-            {
-                IsComputerOpponent = false;
-            }
-            else if (rb.Content.ToString() == "AI")
-            {
-                IsComputerOpponent = true;
-            }
+            // Ställ in att motståndaren inte är en dator
+            IsComputerOpponent = false;
+
+            // Kalla på metoden för att stänga dialogrutan och sätta DialogResult
+            OnOkClicked();
+        }
+
+        // Eventhandler för klick på "AI"-knappen
+        private void AIButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Ställ in att motståndaren är en dator
+            IsComputerOpponent = true;
 
             // Kalla på metoden för att stänga dialogrutan och sätta DialogResult
             OnOkClicked();
