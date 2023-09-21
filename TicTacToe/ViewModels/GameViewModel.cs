@@ -334,13 +334,11 @@ namespace FiveInARow // Namn på projektet
             if (mainMenuClick.Result == MessageBoxResult.Yes)
             {
               
-                //ResetBoard();
+                ResetBoard();
+                ResetWins();
                 var MainMenuView = new MainMenuView();   
                 MainMenuView.ShowDialog();
-                
-                
-
-
+ 
                 //InitializeGame(); // Starta om spelet med samma inställningar som tidigare (svårighetsgrad, antal i rad)
             }
             else
