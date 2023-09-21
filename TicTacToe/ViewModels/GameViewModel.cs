@@ -12,6 +12,7 @@ using System.ComponentModel;
 using TicTacToe.ViewModels;
 using TicTacToe.Settings;
 using TicTacToe.Enums;
+using System.Threading.Channels;
 
 namespace FiveInARow // Namn på projektet
 {
@@ -225,8 +226,7 @@ namespace FiveInARow // Namn på projektet
 
 
         private void OpenSettingsExecute(object obj)
-        {
-            
+        {          
             ShowMainMenu();
         }
 
@@ -320,8 +320,6 @@ namespace FiveInARow // Namn på projektet
 
 
 
-
-
         private void ShowMainMenu()
         {
             
@@ -335,8 +333,14 @@ namespace FiveInARow // Namn på projektet
             // Hantera användarens val
             if (mainMenuClick.Result == MessageBoxResult.Yes)
             {
-                //gameSettings = new GameSettingsViewModel();
-                ResetBoard();
+              
+                //ResetBoard();
+                var MainMenuView = new MainMenuView();   
+                MainMenuView.ShowDialog();
+                
+                
+
+
                 //InitializeGame(); // Starta om spelet med samma inställningar som tidigare (svårighetsgrad, antal i rad)
             }
             else
@@ -462,20 +466,7 @@ namespace FiveInARow // Namn på projektet
         private void DoComputerMove(string mark)
         {
             Random random = new Random();
-
-            //Algorithm algorithm = Algorithm.Hard;
-            //switch (algorithm)
-            //{
-            //    case Algorithm.Easy:
-            //        DoEasyComputerMove(mark);
-            //        break;
-            //    case Algorithm.Medium:
-            //        DoMediumComputerMove(mark);
-            //        break;
-            //    case Algorithm.Hard:
-            //        DoHardComputerMove(mark);
-            //        break;
-            //}   
+ 
            
             if (_algorithmType == Algorithm.Easy)
             {
@@ -526,7 +517,7 @@ namespace FiveInARow // Namn på projektet
                 }
 
                 // Försöker blockera spelaren från att vinna
-                Cell cellToBlock = FindCellToBlock(mark == GameSettingsViewModel.PlayerX ? GameSettingsViewModel.PlayerO : GameSettingsViewModel.PlayerX);
+                Cell cellToBlock = FindCellToBlock(mark == PlayerX ? PlayerO : PlayerX);
                 if (cellToBlock != null)
                 {
                     cellToBlock.Value = mark;
