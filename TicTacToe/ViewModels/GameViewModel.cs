@@ -18,24 +18,26 @@ namespace FiveInARow // Namn på projektet
 
     public class GameViewModel: BaseViewModel
     {
-        private bool _isComputerOpponent;
-        private int _winLength;
-        private string _algorithmType;
+        private static bool _isComputerOpponent = GameSettings.IsComputerOpponent;
+        private static int _winLength = GameSettings.WinLength;
+        private Algorithm _algorithmType = GameSettings.Algorithm;
 
+        public bool IsPlayerXTurn;
+        public string CurrentPlayer;
 
         private int _playerXWins;
         private int _playerOWins;
-       
+
+        public static readonly string PlayerX = "X";
+        public static readonly string PlayerO = "O";
+
         public ICommand OpenSettingsCommand { get; set; }
         public ICommand ResetWinsCommand { get; }
-
         public ICommand CellClickCommand { get; set; }
       
        
         // En ObservableCollection av Cell-objekt som representerar varje cell i spelbrädet.
-        public ObservableCollection<Cell> Cells { get; set; }
-
-        
+        public ObservableCollection<Cell> Cells { get; set; } 
        
         private double _volume = 0.5; // Standardvolymen är satt till 0.5
 
@@ -53,18 +55,13 @@ namespace FiveInARow // Namn på projektet
             }
         }
 
-        public GameSettingsViewModel gameSettings;
-        // Konstruktor som kallas när en ny instans av GameViewModel skapas.
+        //public GameSettingsViewModel gameSettings;
+        //// Konstruktor som kallas när en ny instans av GameViewModel skapas.
 
         public GameViewModel()
         {
+            InitializeGame();
 
-            gameSettings =  new GameSettingsViewModel();
-            gameSettings.InitializeGame();
-
-            _algorithmType = gameSettings.AlgorithmType;
-            _winLength = gameSettings.WinLength;
-            _isComputerOpponent = gameSettings.IsComputerOpponent;
 
         Cells = new ObservableCollection<Cell>();
             for (int i = 0; i < 25; i++)
@@ -81,13 +78,64 @@ namespace FiveInARow // Namn på projektet
             // Skapar en ny ObservableCollection och fyller den med 25 Cell-objekt, initialt satta till "-".
             ResetWinsCommand = new RelayCommand(obj => ResetWins());
             OpenSettingsCommand = new RelayCommand(OpenSettingsExecute);
-            CurrentPlayer = gameSettings.IsPlayerXTurn ? GameSettingsViewModel.PlayerX : GameSettingsViewModel.PlayerO; 
+            CurrentPlayer = IsPlayerXTurn ? PlayerX : PlayerO; 
 
-            if (gameSettings.IsComputerOpponent && !gameSettings.IsPlayerXTurn)
+            if (_isComputerOpponent && !IsPlayerXTurn)
             {              
-                DoComputerMove(GameSettingsViewModel.PlayerO);   
-                gameSettings.CurrentPlayer = GameSettingsViewModel.PlayerX;
-                gameSettings.IsPlayerXTurn = true;
+                DoComputerMove(PlayerO);   
+                CurrentPlayer =PlayerX;
+                IsPlayerXTurn = true;
+            }
+        }
+
+        //public string WhoIsCurrentPlayer() 
+        //{
+        //    CurrentPlayer = null;
+        //    if (!IsPlayerXTurn) 
+        //    {
+        //        return CurrentPlayer = PlayerO;
+        //    }
+        //    return CurrentPlayer = PlayerX;
+        //}
+
+        public void InitializeGame()
+        {
+            var MainMenuView = new MainMenuView();
+            if (MainMenuView.ShowDialog() == true)
+            {
+                // Resten av koden för att initialisera spelet
+                Random random = new Random();
+                int whoStarts = random.Next(0, 2);
+                string startingPlayerMessage;
+
+                if (whoStarts == 0)
+                {
+                    IsPlayerXTurn = true;
+                    CurrentPlayer = PlayerX;
+                    startingPlayerMessage = "Spelare 1 börjar spelet";
+                }
+                else
+                {
+                    IsPlayerXTurn = false;
+                    CurrentPlayer = PlayerO;
+                    startingPlayerMessage = "Spelare 2 börjar spelet";
+
+                    if (_isComputerOpponent)
+                    {
+                        CurrentPlayer = PlayerO;
+                        startingPlayerMessage = "Datorn börjar spelet";
+
+                    }
+                }
+
+                FirstMoveAnnouncer announcer = new FirstMoveAnnouncer(startingPlayerMessage);
+                announcer.Show();
+            }
+            else
+            {
+                string invalidInput = "Inget val gjordes. Spelet avslutas!";
+                InvalidInput invalidInputBox = new InvalidInput(invalidInput);
+                invalidInputBox.ShowDialog();
             }
         }
 
@@ -119,25 +167,25 @@ namespace FiveInARow // Namn på projektet
             if (whoStarts == 0)
             {
                 // Spelare 1 börjar
-                gameSettings.IsPlayerXTurn = true;
-                CurrentPlayer = GameSettingsViewModel.PlayerX;
+                IsPlayerXTurn = true;
+                CurrentPlayer = PlayerX;
                 startingPlayerMessage = "Spelare 1 börjar spelet";
             }
             else
             {
                 // Spelare 2 (eller datorn) börjar
-                gameSettings.IsPlayerXTurn = false;
-                CurrentPlayer = GameSettingsViewModel.PlayerO;
+                IsPlayerXTurn = false;
+                CurrentPlayer = PlayerO;
                 startingPlayerMessage = "Spelare 2 börjar spelet";
 
                 // Om det är en dator motståndare, gör det första draget här
-                if (gameSettings.IsComputerOpponent)
+                if (_isComputerOpponent)
                 {
-                    CurrentPlayer = GameSettingsViewModel.PlayerO;
+                    CurrentPlayer = PlayerO;
                     startingPlayerMessage = "Datorn börjar spelet";
-                    DoComputerMove(GameSettingsViewModel.PlayerO);
-                    CurrentPlayer = GameSettingsViewModel.PlayerX;
-                    gameSettings.IsPlayerXTurn = true;
+                    DoComputerMove(PlayerO);
+                    CurrentPlayer = PlayerX;
+                    IsPlayerXTurn = true;
                 }
             }
 
@@ -177,18 +225,18 @@ namespace FiveInARow // Namn på projektet
                 }
             }
         }
-        public string CurrentPlayer
-        {
-            get { return gameSettings.CurrentPlayer; }
-            set
-            {
-                if (gameSettings.CurrentPlayer != value)
-                {
-                    gameSettings.CurrentPlayer = value;
-                    OnPropertyChanged(nameof(CurrentPlayer)); // Antar att du har en OnPropertyChanged-metod i BaseViewModel
-                }
-            }
-        }
+        //public string CurrentPlayer
+        //{
+        //    get { return gameSettings.CurrentPlayer; }
+        //    set
+        //    {
+        //        if (gameSettings.CurrentPlayer != value)
+        //        {
+        //            gameSettings.CurrentPlayer = value;
+        //            OnPropertyChanged(nameof(CurrentPlayer)); // Antar att du har en OnPropertyChanged-metod i BaseViewModel
+        //        }
+        //    }
+        //}
 
         private void OpenSettingsExecute(object obj)
         {
@@ -209,7 +257,7 @@ namespace FiveInARow // Namn på projektet
 
             if (cellObj is Cell cell && cell.Value == Cell.emptyCell)
             {
-                string currentPlayerMark = gameSettings.IsPlayerXTurn ? GameSettingsViewModel.PlayerX : GameSettingsViewModel.PlayerO;
+                string currentPlayerMark = IsPlayerXTurn ? PlayerX : PlayerO;
 
                 // Uppdaterar den nuvarande spelaren här
                 CurrentPlayer = currentPlayerMark;
@@ -219,12 +267,12 @@ namespace FiveInARow // Namn på projektet
 
                 if (CheckForWin(currentPlayerMark))
                 {
-                    if (currentPlayerMark == GameSettingsViewModel.PlayerX)
+                    if (currentPlayerMark == PlayerX)
                     {
                         PlayerXWins++;
                         OnPropertyChanged(nameof(PlayerXWins));
                     }
-                    else if (currentPlayerMark == GameSettingsViewModel.PlayerO)
+                    else if (currentPlayerMark == PlayerO)
                     {
                         PlayerOWins++;
                         OnPropertyChanged(nameof(PlayerOWins));
@@ -250,16 +298,16 @@ namespace FiveInARow // Namn på projektet
                 }
 
                 // Ändrar spelartur här, efter att CurrentPlayer har uppdaterats
-                gameSettings.IsPlayerXTurn = !gameSettings.IsPlayerXTurn;
+                IsPlayerXTurn = !IsPlayerXTurn;
 
                 // Uppdaterar den nuvarande spelaren igen här, för nästa drag
-                CurrentPlayer = gameSettings.IsPlayerXTurn ? GameSettingsViewModel.PlayerX : GameSettingsViewModel.PlayerO;
+                CurrentPlayer = IsPlayerXTurn ? PlayerX : PlayerO;
 
-                if (gameSettings.IsComputerOpponent && !gameSettings.IsPlayerXTurn)
+                if (_isComputerOpponent && IsPlayerXTurn)
                 {
-                    DoComputerMove(GameSettingsViewModel.PlayerO);
+                    DoComputerMove(PlayerO);
 
-                    if (CheckForWin(GameSettingsViewModel.PlayerO))
+                    if (CheckForWin(PlayerO))
                     {
                         PlayerOWins++;
                         OnPropertyChanged(nameof(PlayerOWins));
@@ -283,10 +331,10 @@ namespace FiveInARow // Namn på projektet
                     }
 
                     // Ändrar spelartur här, efter att CurrentPlayer har uppdaterats
-                    gameSettings.IsPlayerXTurn = !gameSettings.IsPlayerXTurn;
+                    IsPlayerXTurn = !IsPlayerXTurn;
 
                     // Uppdaterar den nuvarande spelaren igen här, för nästa drag
-                    CurrentPlayer = gameSettings.IsPlayerXTurn ? GameSettingsViewModel.PlayerX : GameSettingsViewModel.PlayerO;
+                    CurrentPlayer = IsPlayerXTurn ? PlayerX : PlayerO;
                 }
             }
         }
@@ -308,9 +356,9 @@ namespace FiveInARow // Namn på projektet
             // Hantera användarens val
             if (mainMenuClick.Result == MessageBoxResult.Yes)
             {
-                gameSettings = new GameSettingsViewModel();
+                //gameSettings = new GameSettingsViewModel();
                 ResetBoard();
-                gameSettings.InitializeGame(); // Starta om spelet med samma inställningar som tidigare (svårighetsgrad, antal i rad)
+                InitializeGame(); // Starta om spelet med samma inställningar som tidigare (svårighetsgrad, antal i rad)
             }
             else
             {
@@ -406,7 +454,7 @@ namespace FiveInARow // Namn på projektet
         private bool CheckDirection(int startRow, int startCol, int dRow, int dCol, string mark, int winLength)
         {
             // Loopar genom antalet celler specificerat i winLength (3,4 eller 5)
-            for (int i = 0; i < winLength; i++)
+            for (int i = 0; i < _winLength; i++)
             {
                 // Beräknar den aktuella raden och kolumnen baserat på startpunkten och den givna riktningen (dRow, dCol)
                 int row = startRow + dRow * i;
@@ -450,7 +498,7 @@ namespace FiveInARow // Namn på projektet
             //        break;
             //}   
            
-            if (gameSettings.AlgorithmType == GameSettingsViewModel.Easy)
+            if (_algorithmType == Algorithm.Easy)
             {
                 foreach (var cell in Cells)
                 {
@@ -464,7 +512,7 @@ namespace FiveInARow // Namn på projektet
                     }
                 }
             }
-            else if (gameSettings.AlgorithmType == GameSettingsViewModel.Medium)
+            else if (_algorithmType == Algorithm.Medium)
             {
                 List<Cell> availableCells = new List<Cell>();
 
@@ -488,7 +536,7 @@ namespace FiveInARow // Namn på projektet
                     randomCell.IsMarked = true;  // Sätt IsMarked till true för att ändra färg
                 }
             }
-            else if (gameSettings.AlgorithmType == GameSettingsViewModel.Hard)
+            else if (_algorithmType == Algorithm.Hard)
             {
                 Cell winningCell = FindCellToWin(mark);
                 if (winningCell != null)

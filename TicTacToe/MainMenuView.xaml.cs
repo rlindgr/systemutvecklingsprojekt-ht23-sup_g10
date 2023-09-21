@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using TicTacToe.Settings;
 
 namespace YourNamespace
 {
@@ -7,7 +8,8 @@ namespace YourNamespace
     {
         // Property som håller information om vilken typ av motståndare och antal i rad som användaren har valt
         public bool IsComputerOpponent { get; private set; }
-        public int WinLength { get; private set; }
+        public static int WinLength { get; private set; }
+
 
         // Konstruktor
         public MainMenuView()
@@ -19,7 +21,7 @@ namespace YourNamespace
         private void FriendButton_Click(object sender, RoutedEventArgs e)
         {
             // Ställ in att motståndaren inte är en dator
-            IsComputerOpponent = false;
+            GameSettings.IsComputerOpponent = false;
 
             // Kalla på metoden för att stänga dialogrutan och sätta DialogResult
             OnOkClicked();
@@ -29,7 +31,7 @@ namespace YourNamespace
         private void AIButton_Click(object sender, RoutedEventArgs e)
         {
             // Ställ in att motståndaren är en dator
-            IsComputerOpponent = true;
+            GameSettings.IsComputerOpponent = true;
 
             // Kalla på metoden för att stänga dialogrutan och sätta DialogResult
             OnOkClicked();
@@ -50,11 +52,18 @@ namespace YourNamespace
 
             // Ställ in WinLength från det valda alternativet i ComboBox
             WinLength = int.Parse(((ComboBoxItem)WinLengthComboBox.SelectedItem).Content.ToString());
+            UpdateWinLenght();
 
             // Ställ in DialogResult för att indikera att dialogrutan kan stängas
             DialogResult = true;
             Close();
         }
 
+
+        public static void UpdateWinLenght() 
+        {
+            GameSettings.WinLength = WinLength;
+        
+        }
     }
 }

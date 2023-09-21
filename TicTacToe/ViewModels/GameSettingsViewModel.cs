@@ -1,6 +1,8 @@
 ﻿using FiveInARow;
 using System;
 using System.Windows;
+using TicTacToe.Enums;
+using TicTacToe.Settings;
 using YourNamespace;
 // Lägg till ytterligare using-deklarationer här, om det behövs
 
@@ -8,7 +10,7 @@ namespace TicTacToe.ViewModels
 {
     public class GameSettingsViewModel:BaseViewModel
     {
-        public string AlgorithmType;
+        public Algorithm AlgorithmType;
         public bool IsComputerOpponent;
         public int WinLength;
         public bool IsPlayerXTurn;
@@ -25,61 +27,49 @@ namespace TicTacToe.ViewModels
             
         }
 
-        public void InitializeGame()
-        {
-            var MainMenuView = new MainMenuView();
-            if (MainMenuView.ShowDialog() == true)
-            {
-                if (MainMenuView.EasyRadio.IsChecked == true)
-                {
-                    AlgorithmType = Easy;
-                }
-                else if (MainMenuView.MediumRadio.IsChecked == true)
-                {
-                    AlgorithmType = Medium;
-                }
-                else if (MainMenuView.HardRadio.IsChecked == true)
-                {
-                    AlgorithmType = Hard;
-                }
+        //public void InitializeGame()
+        //{
+        //    var MainMenuView = new MainMenuView();
+        //    if (MainMenuView.ShowDialog() == true)
+        //    {
+        //        IsComputerOpponent = GameSettings.IsComputerOpponent;
+        //        WinLength = GameSettings.WinLength;
+        //        AlgorithmType = GameSettings.Algorithm;
 
-                IsComputerOpponent = MainMenuView.IsComputerOpponent;
-                WinLength = MainMenuView.WinLength;
+        //        // Resten av koden för att initialisera spelet
+        //        Random random = new Random();
+        //        int whoStarts = random.Next(0, 2);
+        //        string startingPlayerMessage;
 
-                // Resten av koden för att initialisera spelet
-                Random random = new Random();
-                int whoStarts = random.Next(0, 2);
-                string startingPlayerMessage;
+        //        if (whoStarts == 0)
+        //        {
+        //            IsPlayerXTurn = true;
+        //            CurrentPlayer = PlayerX;
+        //            startingPlayerMessage = "Spelare 1 börjar spelet";
+        //        }
+        //        else
+        //        {
+        //            IsPlayerXTurn = false;
+        //            CurrentPlayer = PlayerO;
+        //            startingPlayerMessage = "Spelare 2 börjar spelet";
 
-                if (whoStarts == 0)
-                {
-                    IsPlayerXTurn = true;
-                    CurrentPlayer = PlayerX;
-                    startingPlayerMessage = "Spelare 1 börjar spelet";
-                }
-                else
-                {
-                    IsPlayerXTurn = false;
-                    CurrentPlayer = PlayerO;
-                    startingPlayerMessage = "Spelare 2 börjar spelet";
+        //            if (IsComputerOpponent)
+        //            {
+        //                CurrentPlayer = PlayerO;
+        //                startingPlayerMessage = "Datorn börjar spelet";
 
-                    if (IsComputerOpponent)
-                    {
-                        CurrentPlayer = PlayerO;
-                        startingPlayerMessage = "Datorn börjar spelet";
+        //            }
+        //        }
 
-                    }
-                }
-
-                FirstMoveAnnouncer announcer = new FirstMoveAnnouncer(startingPlayerMessage);
-                announcer.Show();
-            }
-            else
-            {
-                string invalidInput = "Inget val gjordes. Spelet avslutas!";
-                InvalidInput invalidInputBox = new InvalidInput(invalidInput);
-                invalidInputBox.ShowDialog();
-            }
-        }
+        //        FirstMoveAnnouncer announcer = new FirstMoveAnnouncer(startingPlayerMessage);
+        //        announcer.Show();
+        //    }
+        //    else
+        //    {
+        //        string invalidInput = "Inget val gjordes. Spelet avslutas!";
+        //        InvalidInput invalidInputBox = new InvalidInput(invalidInput);
+        //        invalidInputBox.ShowDialog();
+        //    }
+        //}
     }
 }
