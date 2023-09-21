@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using TicTacToe.Enums;
 using TicTacToe.Settings;
 
 namespace YourNamespace
@@ -9,7 +10,7 @@ namespace YourNamespace
         // Property som håller information om vilken typ av motståndare och antal i rad som användaren har valt
         public bool IsComputerOpponent { get; private set; }
         public static int WinLength { get; private set; }
-
+        public static Algorithm Algorithm  { get; set; }
 
         // Konstruktor
         public MainMenuView()
@@ -33,6 +34,25 @@ namespace YourNamespace
             // Ställ in att motståndaren är en dator
             GameSettings.IsComputerOpponent = true;
 
+            if (EasyRadio.IsChecked == true)
+            {
+                Algorithm = Algorithm.Easy;
+            }
+            else if (MediumRadio.IsChecked == true)
+            {
+                Algorithm = Algorithm.Medium;
+            }
+            else if (HardRadio.IsChecked == true)
+            {
+                Algorithm = Algorithm.Hard;
+            }
+            else
+            {
+                Algorithm = Algorithm.Easy;
+            }
+
+            UpdateAlgorithm();
+
             // Kalla på metoden för att stänga dialogrutan och sätta DialogResult
             OnOkClicked();
         }
@@ -50,9 +70,12 @@ namespace YourNamespace
                 return; // Avslutar metoden här, dialogrutan kommer att förbli öppen
             }
 
+
             // Ställ in WinLength från det valda alternativet i ComboBox
             WinLength = int.Parse(((ComboBoxItem)WinLengthComboBox.SelectedItem).Content.ToString());
+            
             UpdateWinLenght();
+            
 
             // Ställ in DialogResult för att indikera att dialogrutan kan stängas
             DialogResult = true;
@@ -62,8 +85,12 @@ namespace YourNamespace
 
         public static void UpdateWinLenght() 
         {
-            GameSettings.WinLength = WinLength;
-        
+            GameSettings.WinLength = WinLength;       
+        }
+
+        public static void UpdateAlgorithm() 
+        { 
+            GameSettings.Algorithm = Algorithm;
         }
     }
 }

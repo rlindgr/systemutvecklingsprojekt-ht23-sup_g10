@@ -20,7 +20,7 @@ namespace FiveInARow // Namn på projektet
     {
         private static bool _isComputerOpponent = GameSettings.IsComputerOpponent;
         private static int _winLength = GameSettings.WinLength;
-        private Algorithm _algorithmType = GameSettings.Algorithm;
+        private static Algorithm _algorithmType = GameSettings.Algorithm;
 
         public bool IsPlayerXTurn;
         public string CurrentPlayer;
@@ -68,7 +68,6 @@ namespace FiveInARow // Namn på projektet
             {
                 Cells.Add(new Cell { Value = Cell.emptyCell });
             }
-
           
             // Binder CellClickCommand till CellClick-metoden så att den anropas när en cell klickas på.
             CellClickCommand = new RelayCommand(CellClick);
@@ -88,15 +87,18 @@ namespace FiveInARow // Namn på projektet
             }
         }
 
-        //public string WhoIsCurrentPlayer() 
-        //{
-        //    CurrentPlayer = null;
-        //    if (!IsPlayerXTurn) 
-        //    {
-        //        return CurrentPlayer = PlayerO;
-        //    }
-        //    return CurrentPlayer = PlayerX;
-        //}
+        public string ChangeCurrentPlayer()
+        {
+
+            if (CurrentPlayer == PlayerX)
+            {
+                return CurrentPlayer = PlayerO;
+            }
+            else
+            {
+              return CurrentPlayer = PlayerX;
+            }
+        }
 
         public void InitializeGame()
         {
@@ -110,13 +112,12 @@ namespace FiveInARow // Namn på projektet
 
                 if (whoStarts == 0)
                 {
-                    IsPlayerXTurn = true;
+                    
                     CurrentPlayer = PlayerX;
                     startingPlayerMessage = "Spelare 1 börjar spelet";
                 }
                 else
                 {
-                    IsPlayerXTurn = false;
                     CurrentPlayer = PlayerO;
                     startingPlayerMessage = "Spelare 2 börjar spelet";
 
@@ -124,7 +125,6 @@ namespace FiveInARow // Namn på projektet
                     {
                         CurrentPlayer = PlayerO;
                         startingPlayerMessage = "Datorn börjar spelet";
-
                     }
                 }
 
@@ -166,15 +166,13 @@ namespace FiveInARow // Namn på projektet
 
             if (whoStarts == 0)
             {
-                // Spelare 1 börjar
-                IsPlayerXTurn = true;
+                // Spelare 1 börjar               
                 CurrentPlayer = PlayerX;
                 startingPlayerMessage = "Spelare 1 börjar spelet";
             }
             else
             {
                 // Spelare 2 (eller datorn) börjar
-                IsPlayerXTurn = false;
                 CurrentPlayer = PlayerO;
                 startingPlayerMessage = "Spelare 2 börjar spelet";
 
@@ -184,8 +182,7 @@ namespace FiveInARow // Namn på projektet
                     CurrentPlayer = PlayerO;
                     startingPlayerMessage = "Datorn börjar spelet";
                     DoComputerMove(PlayerO);
-                    CurrentPlayer = PlayerX;
-                    IsPlayerXTurn = true;
+                    ChangeCurrentPlayer();                   
                 }
             }
 
@@ -225,24 +222,14 @@ namespace FiveInARow // Namn på projektet
                 }
             }
         }
-        //public string CurrentPlayer
-        //{
-        //    get { return gameSettings.CurrentPlayer; }
-        //    set
-        //    {
-        //        if (gameSettings.CurrentPlayer != value)
-        //        {
-        //            gameSettings.CurrentPlayer = value;
-        //            OnPropertyChanged(nameof(CurrentPlayer)); // Antar att du har en OnPropertyChanged-metod i BaseViewModel
-        //        }
-        //    }
-        //}
+
 
         private void OpenSettingsExecute(object obj)
         {
             
             ShowMainMenu();
         }
+
         public void CellClick(object cellObj)
         {
             // Skapa en ny MediaPlayer-instans och öppna ljudfilen
@@ -257,10 +244,10 @@ namespace FiveInARow // Namn på projektet
 
             if (cellObj is Cell cell && cell.Value == Cell.emptyCell)
             {
-                string currentPlayerMark = IsPlayerXTurn ? PlayerX : PlayerO;
+                string currentPlayerMark = CurrentPlayer;
 
-                // Uppdaterar den nuvarande spelaren här
-                CurrentPlayer = currentPlayerMark;
+                //// Uppdaterar den nuvarande spelaren här
+                //CurrentPlayer = currentPlayerMark;
 
                 cell.Value = currentPlayerMark;
                 cell.IsMarked = true;
@@ -297,11 +284,7 @@ namespace FiveInARow // Namn på projektet
                     return;
                 }
 
-                // Ändrar spelartur här, efter att CurrentPlayer har uppdaterats
-                IsPlayerXTurn = !IsPlayerXTurn;
-
-                // Uppdaterar den nuvarande spelaren igen här, för nästa drag
-                CurrentPlayer = IsPlayerXTurn ? PlayerX : PlayerO;
+                ChangeCurrentPlayer();
 
                 if (_isComputerOpponent && IsPlayerXTurn)
                 {
@@ -330,11 +313,7 @@ namespace FiveInARow // Namn på projektet
                         return;
                     }
 
-                    // Ändrar spelartur här, efter att CurrentPlayer har uppdaterats
-                    IsPlayerXTurn = !IsPlayerXTurn;
-
-                    // Uppdaterar den nuvarande spelaren igen här, för nästa drag
-                    CurrentPlayer = IsPlayerXTurn ? PlayerX : PlayerO;
+                    ChangeCurrentPlayer();
                 }
             }
         }
@@ -358,7 +337,7 @@ namespace FiveInARow // Namn på projektet
             {
                 //gameSettings = new GameSettingsViewModel();
                 ResetBoard();
-                InitializeGame(); // Starta om spelet med samma inställningar som tidigare (svårighetsgrad, antal i rad)
+                //InitializeGame(); // Starta om spelet med samma inställningar som tidigare (svårighetsgrad, antal i rad)
             }
             else
             {
@@ -623,7 +602,7 @@ namespace FiveInARow // Namn på projektet
             Cell emptyCell = null;
 
             // Loopar genom antalet celler specificerat i winLength (3, 4 eller 5)
-            for (int i = 0; i < winLength; i++)
+            for (int i = 0; i < _winLength; i++)
             {
                 // Beräknar den aktuella raden och kolumnen baserat på startpunkten och den givna riktningen (dRow, dCol)
                 int row = startRow + dRow * i;
@@ -663,7 +642,7 @@ namespace FiveInARow // Namn på projektet
             }
 
             // Kollar om antalet motståndarmarkörer är ett mindre än winLength och om det finns en tom cell
-            if (count == winLength - 1 && emptyCell != null)
+            if (count == _winLength - 1 && emptyCell != null)
             {
                 return emptyCell; // Returnerar den tomma cellen för att blockera
             }
@@ -699,7 +678,7 @@ namespace FiveInARow // Namn på projektet
             int count = 0;
             Cell emptyCell = null;
 
-            for (int i = 0; i < winLength; i++)
+            for (int i = 0; i < _winLength; i++)
             {
                 int row = startRow + dRow * i;
                 int col = startCol + dCol * i;
@@ -732,17 +711,13 @@ namespace FiveInARow // Namn på projektet
                 }
             }
 
-            if (count == winLength - 1 && emptyCell != null)
+            if (count == _winLength - 1 && emptyCell != null)
             {
                 return emptyCell; // Returnera den tomma cellen för att vinna
             }
 
             return null;
-        }
-        
-        
-      
-        
+        }                
     }
 }
 
