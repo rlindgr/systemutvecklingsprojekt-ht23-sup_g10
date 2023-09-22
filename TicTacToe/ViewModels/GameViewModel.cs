@@ -106,8 +106,11 @@ namespace FiveInARow // Namn på projektet
             var MainMenuView = new MainMenuView();
             if (MainMenuView.ShowDialog() == true)
             {
-                // Resten av koden för att initialisera spelet
-                Random random = new Random();
+               _isComputerOpponent = GameSettings.IsComputerOpponent;
+               _winLength = GameSettings.WinLength;
+               _algorithmType = GameSettings.Algorithm;
+        // Resten av koden för att initialisera spelet
+        Random random = new Random();
                 int whoStarts = random.Next(0, 2);
                 string startingPlayerMessage;
 
@@ -336,10 +339,9 @@ namespace FiveInARow // Namn på projektet
               
                 ResetBoard();
                 ResetWins();
-                var MainMenuView = new MainMenuView();   
-                MainMenuView.ShowDialog();
- 
-                //InitializeGame(); // Starta om spelet med samma inställningar som tidigare (svårighetsgrad, antal i rad)
+                
+
+                InitializeGame(); // Starta om spelet med samma inställningar som tidigare (svårighetsgrad, antal i rad)
             }
             else
             {

@@ -21,7 +21,7 @@
             <TextBlock Text="Välj antal i rad för att vinna:" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="#8B4513"/>
             <ComboBox Name="WinLengthComboBox" 
                       ItemsSource="{Binding YourItemsSource}" 
-                  SelectedValue="{Binding GameSettings.WinLength, Mode=TwoWay}"                     
+                  SelectedValue="{Binding Source}"                     
                       VerticalAlignment="Center" HorizontalAlignment="Center" Height="40" Width="100" FontSize="24" Cursor="Hand">
                 <ComboBoxItem Cursor="Hand" Content="3"/>
                 <ComboBoxItem Cursor="Hand" Content="4"/>
