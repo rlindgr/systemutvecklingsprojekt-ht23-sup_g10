@@ -61,15 +61,13 @@ namespace FiveInARow // Namn på projektet
 
         public GameViewModel()
         {
-            InitializeGame();
-
-
-        Cells = new ObservableCollection<Cell>();
+            Cells = new ObservableCollection<Cell>();
             for (int i = 0; i < 25; i++)
             {
                 Cells.Add(new Cell { Value = Cell.emptyCell });
             }
-          
+          InitializeGame();
+
             // Binder CellClickCommand till CellClick-metoden så att den anropas när en cell klickas på.
             CellClickCommand = new RelayCommand(CellClick);
             // Anropar metoden för att initialisera spelet (visar upp dialogrutan där användaren väljer inställningar).
@@ -78,14 +76,7 @@ namespace FiveInARow // Namn på projektet
             // Skapar en ny ObservableCollection och fyller den med 25 Cell-objekt, initialt satta till "-".
             ResetWinsCommand = new RelayCommand(obj => ResetWins());
             OpenSettingsCommand = new RelayCommand(OpenSettingsExecute);
-            CurrentPlayer = IsPlayerXTurn ? PlayerX : PlayerO; 
-
-            if (_isComputerOpponent && !IsPlayerXTurn)
-            {              
-                DoComputerMove(PlayerO);   
-                CurrentPlayer =PlayerX;
-                IsPlayerXTurn = true;
-            }
+           
         }
 
         public string ChangeCurrentPlayer()
@@ -109,8 +100,8 @@ namespace FiveInARow // Namn på projektet
                _isComputerOpponent = GameSettings.IsComputerOpponent;
                _winLength = GameSettings.WinLength;
                _algorithmType = GameSettings.Algorithm;
-        // Resten av koden för att initialisera spelet
-        Random random = new Random();
+               // Resten av koden för att initialisera spelet
+                Random random = new Random();
                 int whoStarts = random.Next(0, 2);
                 string startingPlayerMessage;
 
@@ -129,6 +120,8 @@ namespace FiveInARow // Namn på projektet
                     {
                         CurrentPlayer = PlayerO;
                         startingPlayerMessage = "Datorn börjar spelet";
+                        DoComputerMove(PlayerO);
+                        ChangeCurrentPlayer();
                     }
                 }
 
@@ -144,8 +137,7 @@ namespace FiveInARow // Namn på projektet
         }
 
         public void ShowStartingPlayer(string startingPlayer)
-        {
-          
+        {        
             // Visar en dialogruta (eller vilken typ av UI-komponent du föredrar)
             FirstMoveAnnouncer firstMoveAnnouncement = new FirstMoveAnnouncer(startingPlayer);
             firstMoveAnnouncement.ShowDialog();
@@ -289,7 +281,7 @@ namespace FiveInARow // Namn på projektet
 
                 ChangeCurrentPlayer();
 
-                if (_isComputerOpponent && IsPlayerXTurn)
+                if (_isComputerOpponent && !IsPlayerXTurn)
                 {
                     DoComputerMove(PlayerO);
 
@@ -316,8 +308,9 @@ namespace FiveInARow // Namn på projektet
                         return;
                     }
 
-                    ChangeCurrentPlayer();
+                   ChangeCurrentPlayer();
                 }
+                
             }
         }
 
@@ -338,9 +331,7 @@ namespace FiveInARow // Namn på projektet
             {
               
                 ResetBoard();
-                ResetWins();
-                
-
+                ResetWins();           
                 InitializeGame(); // Starta om spelet med samma inställningar som tidigare (svårighetsgrad, antal i rad)
             }
             else

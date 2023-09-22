@@ -12,7 +12,7 @@ namespace TicTacToe.ViewModels
     public class MainMenuViewModel: BaseViewModel
     {
    
-        public static int WinLength { get; set; }
+        //public static int WinLength { get; set; }
 
         public MainMenuViewModel()
         { 
