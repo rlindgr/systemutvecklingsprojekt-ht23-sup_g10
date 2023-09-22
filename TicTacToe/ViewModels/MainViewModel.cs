@@ -1,35 +1,23 @@
-﻿using System.Collections.ObjectModel;
-using System.Windows.Input;
+﻿using FiveInARow;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using TicTacToe.Settings;
 
-namespace FiveInARow
+namespace TicTacToe.ViewModels
 {
-    public class MainViewModel
+    internal class MainViewModel:BaseViewModel
     {
-        public ObservableCollection<Cell> Cells { get; set; }
-        public ICommand CellClickCommand { get; set; }
-
-        private bool IsPlayerXTurn { get; set; } = true;  
-
+        //gör props för WinLength, IsComputerOpponent, AlgorithmType
+        //1. tilldela värden till GameSettings
+        //2. Byt vy till starta spelet (GameViewModel)
         public MainViewModel()
         {
-            Cells = new ObservableCollection<Cell>();
-            for (int i = 0; i < 25; i++)
-            {
-                Cells.Add(new Cell { Value = "-" });
-            }
-
-            CellClickCommand = new RelayCommand(CellClick);
-        }
-
-        public void CellClick(object cellObj)
-        {
-            if (cellObj is Cell cell && cell.Value == "-")
-            {
-                cell.Value = IsPlayerXTurn ? "X" : "O";  
-                IsPlayerXTurn = !IsPlayerXTurn;  
-
-                // Implementera logik för att kolla om någon har vunnit
-            }
+            //GameSettings.Algorithm = AlgorithmType;
+            //GameSettings.WinLength = WinLength;
+            //GameSettings.IsComputerOpponent = IsComputerOpponent;
         }
     }
 }

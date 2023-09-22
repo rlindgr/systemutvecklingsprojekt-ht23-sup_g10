@@ -1,0 +1,41 @@
+﻿<!-- Huvudfönster för att visa felmeddelanden om ogiltig inmatning -->
+<Window x:Class="TicTacToe.InvalidInput"  
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"  
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"  
+        Title="Ogiltig inmatning" Height="300" Width="800"
+        Cursor="Hand"  
+        Background="#F5ECD4">
+
+    <!-- Grid layout används för att placera innehållet -->
+    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+
+        <!-- StackPanel för att ordna element vertikalt -->
+        <StackPanel Background="#D4BF9D">
+
+            <!-- TextBlock för att visa meddelandet om ogiltig inmatning -->
+            <TextBlock Name="InvalidInputText" Text="Ogiltig inmatning!"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       FontSize="24"
+                       FontWeight="Bold"
+                       Foreground="#8B4513"/>
+
+            <!-- Ytterligare en StackPanel för att ordna knappen horisontellt -->
+            <StackPanel Orientation="Horizontal"
+                        VerticalAlignment="Bottom"
+                        HorizontalAlignment="Center">
+
+                <!-- Knapp för att stänga felmeddelandefönstret -->
+                <Button Content="Ok"
+                        Click="ExitButton_Click"
+                        Margin="10"
+                        Height="60" Width="120"
+                        FontSize="24"
+                        FontWeight="Bold"
+                        Background="#8B4513"
+                        Foreground="#D4BF9D"/>
+
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>

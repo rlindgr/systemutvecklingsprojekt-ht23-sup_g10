@@ -1,0 +1,22 @@
+﻿<!-- Detta är huvudfönstret för en applikation som annonserar vem som gör det första draget i ett spel. -->
+<Window 
+    x:Class="YourNamespace.FirstMoveAnnouncer"  
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"  
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Loaded="Window_Loaded"  
+    Cursor="Hand"
+    Background="#F5ECD4"  
+    Title="First Move Announcer" Height="300" Width="400">
+
+    <!-- En Grid-layout som kommer att innehålla alla andra GUI-element -->
+    <Grid x:Name="RootGrid">
+
+        <!-- En etikett för att visa text, centreras i mitten av Grid -->
+        <Label x:Name="MessageLabel" 
+            Foreground="#228B22"
+            FontWeight="Bold"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+            FontSize="24"/>
+    </Grid>
+</Window>

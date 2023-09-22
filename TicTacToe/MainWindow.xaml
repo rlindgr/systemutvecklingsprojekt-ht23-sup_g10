@@ -2,9 +2,72 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:FiveInARow"
-        Title="5 i rad" Height="300" Width="300">
+        xmlns:vm="clr-namespace:TicTacToe.ViewModels"
+        Title="5 i rad" Height="800" Width="800"
+        Cursor="Hand">
+
+    <Window.Resources>
+        <Style x:Key="CustomButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#8B4513"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Height" Value="60"/>
+            <Setter Property="Width" Value="120"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="Margin" Value="10"/>
+        </Style>
+    </Window.Resources>
+
     <Grid>
-        <ItemsControl ItemsSource="{Binding Cells}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- StackPanel för volym -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Image Source="C:\Users\eriks\source\repos\TicTacToe\TicTacToe\103711_louder_speaker_icon.png" Width="24" Height="24"/>
+            <Slider Minimum="0" Maximum="1" Value="{Binding Volume}" Width="100" Height="20"/>
+        </StackPanel>
+
+        <!-- Grid för att indikera vems tur det är, vinster och andra kontroller -->
+        <Grid Background="#D4BF9D" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock FontWeight="Bold" Text="Spelare: " Margin="5" Foreground="#8B4513"/>
+            <TextBlock Text="{Binding CurrentPlayer}" Grid.Column="1" Margin="5" Foreground="#8B4513" FontSize="36" FontWeight="Bold" MinWidth="50"/>
+
+
+            <Button Content="Main Menu" Grid.Column="2" HorizontalAlignment="Left" Command="{Binding OpenSettingsCommand}" Style="{StaticResource CustomButtonStyle}" Margin="107,10,0,10" />
+            <Button Content="Reset Score" Grid.Column="2" HorizontalAlignment="Left" Command="{Binding ResetWinsCommand}" Style="{StaticResource CustomButtonStyle}" Margin="303,10,0,10" />
+
+            <Grid Grid.Column="4" VerticalAlignment="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Label FontWeight="Bold" Content="{Binding PlayerXWins}" Grid.Row="0" HorizontalAlignment="Left" Margin="128,-3,0,13" Foreground="SaddleBrown" FontSize="15"/>
+                <Label FontWeight="Bold" Content="{Binding PlayerOWins}" Grid.Row="0" HorizontalAlignment="Left" Margin="128,32,0,4" Foreground="SaddleBrown" FontSize="15" Grid.RowSpan="2"/>
+
+                <TextBlock FontWeight="Bold" Grid.Row="0" HorizontalAlignment="Left" Margin="5,5,0,5">
+                    <Run Foreground="SaddleBrown" Text="Spelare X har vunnit : "/>
+
+                </TextBlock>
+                <TextBlock FontWeight="Bold" Grid.Row="1" HorizontalAlignment="Right" Margin="5,0,41,10" Width="171">
+                    <Run Foreground="SaddleBrown" Text="Spelare O har vunnit : "/>
+
+                </TextBlock>
+            </Grid>
+        </Grid>
+
+        <!-- ItemsControl här -->
+        <ItemsControl Grid.Row="2" ItemsSource="{Binding Cells}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <UniformGrid Rows="5" Columns="5"/>
@@ -12,7 +75,27 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Button Content="{Binding Value}" Command="{Binding Path=DataContext.CellClickCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}"/>
+                    <Button Content="{Binding Value}" 
+                            Command="{Binding Path=DataContext.CellClickCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
+                            CommandParameter="{Binding}"
+                            FontSize="60">
+                        <Button.Style>
+                            <Style TargetType="{x:Type Button}">
+                                <Setter Property="Background" Value="#704214" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Value}" Value="X">
+                                        <Setter Property="Foreground" Value="#F8350C"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Value}" Value="O">
+                                        <Setter Property="Foreground" Value="Black"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsMarked}" Value="True">
+                                        <Setter Property="Background" Value="#D4BF9D"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
