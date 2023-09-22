@@ -61,14 +61,15 @@ namespace FiveInARow // Namn på projektet
 
         public GameViewModel()
         {
-            InitializeGame();
 
-
-        Cells = new ObservableCollection<Cell>();
+            Cells = new ObservableCollection<Cell>();
             for (int i = 0; i < 25; i++)
             {
                 Cells.Add(new Cell { Value = Cell.emptyCell });
             }
+            InitializeGame();
+
+
           
             // Binder CellClickCommand till CellClick-metoden så att den anropas när en cell klickas på.
             CellClickCommand = new RelayCommand(CellClick);
@@ -78,14 +79,11 @@ namespace FiveInARow // Namn på projektet
             // Skapar en ny ObservableCollection och fyller den med 25 Cell-objekt, initialt satta till "-".
             ResetWinsCommand = new RelayCommand(obj => ResetWins());
             OpenSettingsCommand = new RelayCommand(OpenSettingsExecute);
-            CurrentPlayer = IsPlayerXTurn ? PlayerX : PlayerO; 
+            
 
-            if (_isComputerOpponent && !IsPlayerXTurn)
-            {              
-                DoComputerMove(PlayerO);   
-                CurrentPlayer =PlayerX;
-                IsPlayerXTurn = true;
-            }
+
+
+            
         }
 
         public string ChangeCurrentPlayer()
@@ -129,6 +127,8 @@ namespace FiveInARow // Namn på projektet
                     {
                         CurrentPlayer = PlayerO;
                         startingPlayerMessage = "Datorn börjar spelet";
+                        DoComputerMove(PlayerO);
+                        ChangeCurrentPlayer ();
                     }
                 }
 
@@ -289,7 +289,7 @@ namespace FiveInARow // Namn på projektet
 
                 ChangeCurrentPlayer();
 
-                if (_isComputerOpponent && IsPlayerXTurn)
+                if (_isComputerOpponent && !IsPlayerXTurn)
                 {
                     DoComputerMove(PlayerO);
 
@@ -549,6 +549,7 @@ namespace FiveInARow // Namn på projektet
                     randomCell.IsMarked = true;  // Sätt IsMarked till true för att ändra färg
                 }
             }
+            
         }
 
 
