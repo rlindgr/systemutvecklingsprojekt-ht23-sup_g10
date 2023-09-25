@@ -83,9 +83,9 @@ namespace YourNamespace
         }
 
 
-        public static void UpdateWinLenght() 
+        public static void UpdateWinLenght()
         {
-            GameSettings.WinLength = WinLength;       
+            GameSettings.WinLength = WinLength;
         }
 
         public static void UpdateAlgorithm() 

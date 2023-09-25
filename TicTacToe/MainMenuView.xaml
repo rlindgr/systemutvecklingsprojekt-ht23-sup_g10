@@ -5,6 +5,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
     xmlns:local="clr-namespace:YourNamespace"
     xmlns:vm="clr-namespace:TicTacToe.ViewModels"
+    xmlns:vw="clr_namespace:TicTacToe.Views"
     xmlns:st="clr-namespace:TicTacToe.Settings"
         Title="Välj motståndare" Height="400" Width="800"
         Cursor="Hand"
@@ -12,6 +13,7 @@
     <Window.DataContext>
         <vm:MainMenuViewModel/>
     </Window.DataContext>
+
     <Window.Resources>
         <local:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
     </Window.Resources>
@@ -21,12 +23,12 @@
             <TextBlock Text="Välj antal i rad för att vinna:" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="#8B4513"/>
             <ComboBox Name="WinLengthComboBox" 
                       ItemsSource="{Binding YourItemsSource}" 
-                  SelectedValue="{Binding WinLengt}"                 
+                  SelectedValue="{Binding SelectedOption, Mode=TwoWay}"              
                       VerticalAlignment="Center" HorizontalAlignment="Center" Height="40" Width="100" FontSize="24" Cursor="Hand">
                 <ComboBoxItem Cursor="Hand" Content="3"/>
                 <ComboBoxItem Cursor="Hand" Content="4"/>
                 <ComboBoxItem Cursor="Hand" Content="5"/>
-                <vm:MainMenuViewModel />
+                <!--<vm:MainMenuViewModel />-->
             </ComboBox>
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <TextBlock Text="{Binding GameSettings.AlgorithmType}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold" Margin="0,0,10,0" Foreground="#8B4513"/>

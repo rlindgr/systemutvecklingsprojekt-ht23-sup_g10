@@ -13,7 +13,7 @@ namespace FiveInARow
             InitializeComponent();
 
             DataContext = new GameViewModel();
-            
+
 
             // Registrera Closing-eventet
             this.Closing += MainWindow_Closing;

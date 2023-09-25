@@ -24,7 +24,8 @@ namespace FiveInARow // Namn på projektet
         private static Algorithm _algorithmType = GameSettings.Algorithm;
 
         public bool IsPlayerXTurn;
-        public string CurrentPlayer;
+        public string CurrentPlayer { get; set; }
+        //public string CurrentPlayer;
 
         private int _playerXWins;
         private int _playerOWins;

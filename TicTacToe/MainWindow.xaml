@@ -6,6 +6,9 @@
         Title="5 i rad" Height="800" Width="800"
         Cursor="Hand">
 
+
+
+
     <Window.Resources>
         <Style x:Key="CustomButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="#8B4513"/>
@@ -24,6 +27,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
+
         <!-- StackPanel för volym -->
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
             <Image Source="C:\Users\eriks\source\repos\TicTacToe\TicTacToe\103711_louder_speaker_icon.png" Width="24" Height="24"/>
@@ -41,7 +45,8 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock FontWeight="Bold" Text="Spelare: " Margin="5" Foreground="#8B4513"/>
-            <TextBlock Text="{Binding CurrentPlayer}" Grid.Column="1" Margin="5" Foreground="#8B4513" FontSize="36" FontWeight="Bold" MinWidth="50"/>
+            <TextBlock Text="{Binding CurrentPlayer}" Grid.Column="1" Margin="5" Foreground="#8B4513" FontSize="36" FontWeight="Bold" MinWidth="50">
+            </TextBlock>
 
 
             <Button Content="Main Menu" Grid.Column="2" HorizontalAlignment="Left" Command="{Binding OpenSettingsCommand}" Style="{StaticResource CustomButtonStyle}" Margin="107,10,0,10" />
