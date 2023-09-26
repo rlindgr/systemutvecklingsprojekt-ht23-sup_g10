@@ -6,8 +6,8 @@ public partial class WinnerAnnouncement : Window
     {
         InitializeComponent();
         WinnerText.Text = winnerText;
-        this.Left = 600;  // x-koordinat
-        this.Top = 300;   // y-koordinat
+        this.Left = 100;  // x-koordinat
+        this.Top = 10;   // y-koordinat
     }
     public MessageBoxResult Result { get; set; }
 

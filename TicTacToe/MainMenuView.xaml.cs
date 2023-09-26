@@ -7,59 +7,50 @@ namespace YourNamespace
 {
     public partial class MainMenuView : Window
     {
-        // Property som håller information om vilken typ av motståndare och antal i rad som användaren har valt
-        public bool IsComputerOpponent { get; private set; }
-        public static int WinLength { get; private set; }
-        public static Algorithm Algorithm  { get; set; }
 
         // Konstruktor
         public MainMenuView()
         {
             InitializeComponent();
+            radioButtonComputer.IsChecked = true;
         }
 
         // Eventhandler för klick på "Vän"-knappen
-        private void FriendButton_Click(object sender, RoutedEventArgs e)
-        {
-            // Ställ in att motståndaren inte är en dator
-            GameSettings.IsComputerOpponent = false;
+        //private void FriendButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    // Ställ in att motståndaren inte är en dator
+        //    //GameSettings.IsComputerOpponent = false;
 
-            // Kalla på metoden för att stänga dialogrutan och sätta DialogResult
-            OnOkClicked();
-        }
+        //    // Kalla på metoden för att stänga dialogrutan och sätta DialogResult
+        //    OnOkClicked();
+        //}
 
-        // Eventhandler för klick på "AI"-knappen
-        private void AIButton_Click(object sender, RoutedEventArgs e)
-        {
-            // Ställ in att motståndaren är en dator
-            GameSettings.IsComputerOpponent = true;
+        //// Eventhandler för klick på "AI"-knappen
+        //private void AIButton_Click(object sender, RoutedEventArgs e)
+        //{        
+        //    //GameSettings.IsComputerOpponent = true;
 
-            if (EasyRadio.IsChecked == true)
-            {
-                Algorithm = Algorithm.Easy;
-            }
-            else if (MediumRadio.IsChecked == true)
-            {
-                Algorithm = Algorithm.Medium;
-            }
-            else if (HardRadio.IsChecked == true)
-            {
-                Algorithm = Algorithm.Hard;
-            }
-            else
-            {
-                Algorithm = Algorithm.Easy;
-            }
-
-            UpdateAlgorithm();
-
-            // Kalla på metoden för att stänga dialogrutan och sätta DialogResult
-            OnOkClicked();
-        }
+        //    OnOkClicked();
+        //}
 
 
         // Metod för att ställa in DialogResult och stänga dialogrutan
-        private void OnOkClicked()
+        //private void OnOkClicked()
+        //{
+        //    // Kontrollerar om användaren har valt något alternativ för antal i rad
+        //    if (WinLengthComboBox.SelectedItem == null)
+        //    {
+        //        // Visar en varningsmeddelande om ingen val har gjorts
+        //        MessageBox.Show("Var god välj hur många i rad du vill tävla till", "Varning", MessageBoxButton.OK, MessageBoxImage.Warning);
+
+        //        return; // Avslutar metoden här, dialogrutan kommer att förbli öppen
+        //    }
+
+        //    DialogResult = true;
+        //    Close();
+        //}
+
+        private void btnStart_Click(object sender, RoutedEventArgs e)
         {
             // Kontrollerar om användaren har valt något alternativ för antal i rad
             if (WinLengthComboBox.SelectedItem == null)
@@ -70,27 +61,33 @@ namespace YourNamespace
                 return; // Avslutar metoden här, dialogrutan kommer att förbli öppen
             }
 
-
-            // Ställ in WinLength från det valda alternativet i ComboBox
-            WinLength = int.Parse(((ComboBoxItem)WinLengthComboBox.SelectedItem).Content.ToString());
-            
-            UpdateWinLenght();
-            
-
-            // Ställ in DialogResult för att indikera att dialogrutan kan stängas
             DialogResult = true;
             Close();
         }
 
 
-        public static void UpdateWinLenght()
+
+
+        private void radioButtonHuman_Checked(object sender, RoutedEventArgs e)
         {
-            GameSettings.WinLength = WinLength;
+            if (radioButtonHuman.IsChecked == true)
+            {
+                txtBlockDifficulty.Opacity = 0.2;
+                cmbBoxDifficulty.IsEnabled = false;
+                cmbBoxDifficulty.Opacity = 0.2;
+            }
         }
 
-        public static void UpdateAlgorithm() 
-        { 
-            GameSettings.Algorithm = Algorithm;
+        private void radioButtonComputer_Checked(object sender, RoutedEventArgs e)
+        {
+            if (radioButtonComputer.IsChecked ==true)
+            {
+                txtBlockDifficulty.Opacity = 1.0;
+                cmbBoxDifficulty.IsEnabled = true;
+                cmbBoxDifficulty.Opacity = 1.0;
+            }
+
         }
+
     }
 }
