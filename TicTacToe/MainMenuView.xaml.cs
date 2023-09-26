@@ -1,7 +1,10 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using TicTacToe.Enums;
 using TicTacToe.Settings;
+using TicTacToe.ViewModels;
+using static TicTacToe.ViewModels.MainMenuViewModel;
 
 namespace YourNamespace
 {
@@ -11,25 +14,32 @@ namespace YourNamespace
         // Konstruktor
         public MainMenuView()
         {
+            DataContext = new MainMenuViewModel();
             InitializeComponent();
             radioButtonComputer.IsChecked = true;
+            ((MainMenuViewModel)DataContext).OnStartGame += StartGameEventHandler;
         }
-
-
-        private void btnStart_Click(object sender, RoutedEventArgs e)
+        private void StartGameEventHandler(object sender, EventArgs e)
         {
-            // Kontrollerar om användaren har valt något alternativ för antal i rad
-            if (WinLengthComboBox.SelectedItem == null)
-            {
-                // Visar en varningsmeddelande om ingen val har gjorts
-                MessageBox.Show("Var god välj hur många i rad du vill tävla till", "Varning", MessageBoxButton.OK, MessageBoxImage.Warning);
-
-                return; // Avslutar metoden här, dialogrutan kommer att förbli öppen
-            }
-
+            // Här kan du nu hantera DialogResult och Close.
             DialogResult = true;
             Close();
         }
+
+        //private void btnStart_Click(object sender, RoutedEventArgs e)
+        //{
+        //    //// Kontrollerar om användaren har valt något alternativ för antal i rad
+        //    //if (WinLengthComboBox.SelectedItem == null)
+        //    //{
+        //    //    // Visar en varningsmeddelande om ingen val har gjorts
+        //    //    MessageBox.Show("Var god välj hur många i rad du vill tävla till", "Varning", MessageBoxButton.OK, MessageBoxImage.Warning);
+
+        //    //    return; // Avslutar metoden här, dialogrutan kommer att förbli öppen
+        //    //}
+
+        //    //DialogResult = true;
+        //    //Close();
+        //}
 
 
 
@@ -55,5 +65,6 @@ namespace YourNamespace
 
         }
 
+      
     }
 }

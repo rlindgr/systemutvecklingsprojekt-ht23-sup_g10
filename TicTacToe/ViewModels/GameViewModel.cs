@@ -459,7 +459,7 @@ namespace FiveInARow // Namn på projektet
             Random random = new Random();
  
            
-            if (_algorithmType == Algorithm.Easy)
+            if (_algorithmType == Algorithm.Lätt)
             {
                 foreach (var cell in Cells)
                 {
@@ -473,7 +473,7 @@ namespace FiveInARow // Namn på projektet
                     }
                 }
             }
-            else if (_algorithmType == Algorithm.Medium)
+            else if (_algorithmType == Algorithm.Mellan)
             {
                 List<Cell> availableCells = new List<Cell>();
 
@@ -497,7 +497,7 @@ namespace FiveInARow // Namn på projektet
                     randomCell.IsMarked = true;  // Sätt IsMarked till true för att ändra färg
                 }
             }
-            else if (_algorithmType == Algorithm.Hard)
+            else if (_algorithmType == Algorithm.Svår)
             {
                 Cell winningCell = FindCellToWin(mark);
                 if (winningCell != null)
