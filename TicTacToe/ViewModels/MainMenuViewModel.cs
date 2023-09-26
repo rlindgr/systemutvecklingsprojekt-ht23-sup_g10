@@ -12,7 +12,7 @@ namespace TicTacToe.ViewModels
 {
     public partial class MainMenuViewModel: BaseViewModel
     {
-        public static bool IsComputerOpponent { get; private set; }
+        public static bool IsComputerOpponent { get; set; }
         public static int WinLength { get; private set; }
         public static Algorithm Algorithm { get; set; }
 
@@ -22,7 +22,7 @@ namespace TicTacToe.ViewModels
             SelectedAlgorithm = GameSettings.Algorithm;
             WinLengthOptions = new List<int> { 3, 4, 5 };
             
-            IsComputerOpponent = GameSettings.IsComputerOpponent;
+            //IsComputerOpponent = GameSettings.IsComputerOpponent;
 
         } 
         public List<int> WinLengthOptions { get; }
@@ -63,18 +63,18 @@ namespace TicTacToe.ViewModels
             }
         }
 
+        
         private bool _selectedOpponent;
         public bool SelectedOpponent
         {
 
-            get { return _selectedOpponent; }
+            get => _selectedOpponent; 
             set
             {
                 if (_selectedOpponent != value)
                 {
-
                     _selectedOpponent = value;
-                    IsComputerOpponent = _selectedOpponent;
+                    IsComputerOpponent = !_selectedOpponent;
                     OnPropertyChanged(nameof(SelectedOpponent));
                     UpdateOpponent();
                 }

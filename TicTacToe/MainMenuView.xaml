@@ -30,7 +30,7 @@
             <TextBlock Text="Spela mot en Vän eller mot Datorn" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="#8B4513"/>
             <StackPanel Orientation="Horizontal" Height="36"  HorizontalAlignment="Center">
 
-                <RadioButton Content="Vän" x:Name="radioButtonHuman" FontSize="24" Margin="0,0,30,0" IsChecked="{Binding SelectedOpponent, Mode=TwoWay}" Checked="radioButtonHuman_Checked"    />
+                <RadioButton Content="Vän" x:Name="radioButtonHuman" FontSize="24" Margin="0,0,30,0" IsChecked="{Binding SelectedOpponent}" Checked="radioButtonHuman_Checked"    />
                 <RadioButton Content="Datorn" x:Name="radioButtonComputer" FontSize="24" Checked="radioButtonComputer_Checked" />
             </StackPanel>
 
@@ -59,6 +59,6 @@
                         Foreground="White" Click="btnStart_Click" />
             </StackPanel>
         </StackPanel>
-        <TextBox Background="#D4BF9D" Foreground="#8B4513" HorizontalAlignment="Left" Height="91" Margin="0,-68,0,0" TextWrapping="Wrap" Text="Luffarschack" VerticalAlignment="Top" Width="462" FontFamily="Bodoni MT Black" FontSize="48" TextAlignment="Center"/>
+        <TextBox Background="#D4BF9D" Foreground="#8B4513" HorizontalAlignment="Left" Height="91" Margin="0,-68,0,0" TextWrapping="Wrap" Text="Luffarschack" VerticalAlignment="Top" Width="462" FontFamily="Kristen ITC" FontSize="48" TextAlignment="Center" FontWeight="Bold"/>
     </Grid>
 </Window>

@@ -25,7 +25,6 @@ namespace FiveInARow // Namn på projektet
 
         public bool IsPlayerXTurn;
         public string CurrentPlayer { get; set; }
-        //public string CurrentPlayer;
 
         private int _playerXWins;
         private int _playerOWins;

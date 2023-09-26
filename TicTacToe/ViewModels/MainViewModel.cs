@@ -15,9 +15,7 @@ namespace TicTacToe.ViewModels
         //2. Byt vy till starta spelet (GameViewModel)
         public MainViewModel()
         {
-            //GameSettings.Algorithm = AlgorithmType;
-            //GameSettings.WinLength = WinLength;
-            //GameSettings.IsComputerOpponent = IsComputerOpponent;
+         
         }
     }
 }
