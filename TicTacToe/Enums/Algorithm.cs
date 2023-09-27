@@ -8,8 +8,8 @@ namespace TicTacToe.Enums
 {
      public enum Algorithm
     {
-        Easy,
-        Hard,
-        Medium
+        Lätt,
+        Mellan,
+        Svår
     }
 }

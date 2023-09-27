@@ -1,30 +1,30 @@
 ﻿using System;
-using System.Collections.Generic; // Importera för List<T>
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
-using System.Collections.ObjectModel; // För ObservableCollection  
-using System.Windows; // För MessageBox och andra WPF-komponenter
-using System.Windows.Input;//För Icommand   
-using YourNamespace;
-using TicTacToe;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Input;
 using System.Windows.Media;
-using TicTacToe.Views;
-using System.ComponentModel;
-using TicTacToe.ViewModels;
-using TicTacToe.Settings;
+using System.Windows;
 using TicTacToe.Enums;
-using System.Threading.Channels;
+using TicTacToe.Settings;
+using TicTacToe.Views;
+using YourNamespace;
+using TicTacToe.Models;
+using TicTacToe.Commands;
 
-namespace FiveInARow // Namn på projektet
+namespace TicTacToe.ViewModels
 {
-
-    public class GameViewModel: BaseViewModel
+    class GameViewModel: BaseViewModel
     {
         private static bool _isComputerOpponent = GameSettings.IsComputerOpponent;
         private static int _winLength = GameSettings.WinLength;
         private static Algorithm _algorithmType = GameSettings.Algorithm;
 
+
         public bool IsPlayerXTurn;
-        public string CurrentPlayer;
+        public string CurrentPlayer { get; set; }
 
         private int _playerXWins;
         private int _playerOWins;
@@ -32,14 +32,15 @@ namespace FiveInARow // Namn på projektet
         public static readonly string PlayerX = "X";
         public static readonly string PlayerO = "O";
 
-        public ICommand OpenSettingsCommand { get; set; }
+
         public ICommand ResetWinsCommand { get; }
         public ICommand CellClickCommand { get; set; }
-      
-       
+        public ICommand MainMenuCommand { get; private set; }
+
+
         // En ObservableCollection av Cell-objekt som representerar varje cell i spelbrädet.
-        public ObservableCollection<Cell> Cells { get; set; } 
-       
+        public ObservableCollection<Cell> Cells { get; set; }
+
         private double _volume = 0.5; // Standardvolymen är satt till 0.5
 
         public double Volume
@@ -50,18 +51,14 @@ namespace FiveInARow // Namn på projektet
                 if (value >= 0.0 && value <= 1.0)
                 {
                     _volume = value;
-                    // Om du har en PropertyChanged-event, trigga den här.
-                    // PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Volume)));
                 }
             }
         }
 
-        //public GameSettingsViewModel gameSettings;
-        //// Konstruktor som kallas när en ny instans av GameViewModel skapas.
+
 
         public GameViewModel()
         {
-
             Cells = new ObservableCollection<Cell>();
             for (int i = 0; i < 25; i++)
             {
@@ -69,21 +66,15 @@ namespace FiveInARow // Namn på projektet
             }
             InitializeGame();
 
-
-          
             // Binder CellClickCommand till CellClick-metoden så att den anropas när en cell klickas på.
             CellClickCommand = new RelayCommand(CellClick);
             // Anropar metoden för att initialisera spelet (visar upp dialogrutan där användaren väljer inställningar).
-            /*InitializeGame();*/ 
+            /*InitializeGame();*/
 
             // Skapar en ny ObservableCollection och fyller den med 25 Cell-objekt, initialt satta till "-".
-            ResetWinsCommand = new RelayCommand(obj => ResetWins());
-            OpenSettingsCommand = new RelayCommand(OpenSettingsExecute);
-            
+            ResetWinsCommand = new RelayCommand(obj => ResetWins());         
+            MainMenuCommand = new RelayCommand(x => MainMenu());
 
-
-
-            
         }
 
         public string ChangeCurrentPlayer()
@@ -95,26 +86,24 @@ namespace FiveInARow // Namn på projektet
             }
             else
             {
-              return CurrentPlayer = PlayerX;
+                return CurrentPlayer = PlayerX;
             }
         }
 
         public void InitializeGame()
         {
-            var MainMenuView = new MainMenuView();
-            if (MainMenuView.ShowDialog() == true)
-            {
-               _isComputerOpponent = GameSettings.IsComputerOpponent;
-               _winLength = GameSettings.WinLength;
-               _algorithmType = GameSettings.Algorithm;
-        // Resten av koden för att initialisera spelet
-        Random random = new Random();
+ 
+                _isComputerOpponent = GameSettings.IsComputerOpponent;
+                _winLength = GameSettings.WinLength;
+                _algorithmType = GameSettings.Algorithm;
+               
+                Random random = new Random();
                 int whoStarts = random.Next(0, 2);
                 string startingPlayerMessage;
 
                 if (whoStarts == 0)
                 {
-                    
+
                     CurrentPlayer = PlayerX;
                     startingPlayerMessage = "Spelare 1 börjar spelet";
                 }
@@ -128,25 +117,17 @@ namespace FiveInARow // Namn på projektet
                         CurrentPlayer = PlayerO;
                         startingPlayerMessage = "Datorn börjar spelet";
                         DoComputerMove(PlayerO);
-                        ChangeCurrentPlayer ();
+                        ChangeCurrentPlayer();
                     }
                 }
 
                 FirstMoveAnnouncer announcer = new FirstMoveAnnouncer(startingPlayerMessage);
                 announcer.Show();
-            }
-            else
-            {
-                string invalidInput = "Inget val gjordes. Spelet avslutas!";
-                InvalidInput invalidInputBox = new InvalidInput(invalidInput);
-                invalidInputBox.ShowDialog();
-            }
+            
         }
 
         public void ShowStartingPlayer(string startingPlayer)
-        {
-          
-            // Visar en dialogruta (eller vilken typ av UI-komponent du föredrar)
+        {          
             FirstMoveAnnouncer firstMoveAnnouncement = new FirstMoveAnnouncer(startingPlayer);
             firstMoveAnnouncement.ShowDialog();
         }
@@ -163,7 +144,7 @@ namespace FiveInARow // Namn på projektet
             // Slumpmässigt avgör vem som börjar
             Random random = new Random();
             int whoStarts = random.Next(0, 2);
-       
+
 
             // Meddelande om vem som börjar
             string startingPlayerMessage;
@@ -186,7 +167,7 @@ namespace FiveInARow // Namn på projektet
                     CurrentPlayer = PlayerO;
                     startingPlayerMessage = "Datorn börjar spelet";
                     DoComputerMove(PlayerO);
-                    ChangeCurrentPlayer();                   
+                    ChangeCurrentPlayer();
                 }
             }
 
@@ -228,10 +209,6 @@ namespace FiveInARow // Namn på projektet
         }
 
 
-        private void OpenSettingsExecute(object obj)
-        {          
-            ShowMainMenu();
-        }
 
         public void CellClick(object cellObj)
         {
@@ -318,37 +295,10 @@ namespace FiveInARow // Namn på projektet
 
                     ChangeCurrentPlayer();
                 }
+
             }
         }
 
-
-
-        private void ShowMainMenu()
-        {
-            
-            // Här kan du bestämma vilken text som ska visas
-            string displayText = "Vill du gå till huvudmenyn?";
-
-            // Skapa ett nytt MainMenuClick-fönster och visa det
-            MainMenuClick mainMenuClick = new MainMenuClick(displayText);
-            mainMenuClick.ShowDialog();
-
-            // Hantera användarens val
-            if (mainMenuClick.Result == MessageBoxResult.Yes)
-            {
-              
-                ResetBoard();
-                ResetWins();
-                
-
-                InitializeGame(); // Starta om spelet med samma inställningar som tidigare (svårighetsgrad, antal i rad)
-            }
-            else
-            {
-                // Gör något annat (t.ex. stänga programmet) när användaren klickar på "Avsluta" eller motsvarande
-                
-            }
-        }
 
         private void EndGame(string displayMessage)
         {
@@ -424,7 +374,7 @@ namespace FiveInARow // Namn på projektet
                        )
                     {
                         return true; // Returnerar true om en vinst har hittats
-                   
+
                     }
 
                 }
@@ -466,9 +416,9 @@ namespace FiveInARow // Namn på projektet
         private void DoComputerMove(string mark)
         {
             Random random = new Random();
- 
-           
-            if (_algorithmType == Algorithm.Easy)
+
+
+            if (_algorithmType == Algorithm.Lätt)
             {
                 foreach (var cell in Cells)
                 {
@@ -482,7 +432,7 @@ namespace FiveInARow // Namn på projektet
                     }
                 }
             }
-            else if (_algorithmType == Algorithm.Medium)
+            else if (_algorithmType == Algorithm.Mellan)
             {
                 List<Cell> availableCells = new List<Cell>();
 
@@ -498,7 +448,7 @@ namespace FiveInARow // Namn på projektet
                 // Kontrollerar om det finns några lediga celler
                 if (availableCells.Any())
                 {
-                    
+
                     // Väljer en slumpmässig cell från listan av tillgängliga celler
                     int index = random.Next(availableCells.Count);
                     Cell randomCell = availableCells[index];
@@ -506,7 +456,7 @@ namespace FiveInARow // Namn på projektet
                     randomCell.IsMarked = true;  // Sätt IsMarked till true för att ändra färg
                 }
             }
-            else if (_algorithmType == Algorithm.Hard)
+            else if (_algorithmType == Algorithm.Svår)
             {
                 Cell winningCell = FindCellToWin(mark);
                 if (winningCell != null)
@@ -709,15 +659,24 @@ namespace FiveInARow // Namn på projektet
             }
 
             return null;
-        }                
+        }
+        private void MainMenu()
+        {
+          
+             // Här kan du bestämma vilken text som ska visas
+            string displayText = "Vill du gå till huvudmenyn?";
+
+            // Skapa ett nytt MainMenuClick-fönster och visa det
+            MainMenuClick mainMenuClick = new MainMenuClick(displayText);
+            mainMenuClick.ShowDialog();
+
+            // Hantera användarens val
+            if (mainMenuClick.Result == MessageBoxResult.Yes)
+            {
+
+                MainViewModel.Instance.CurrentViewModel = new MainMenuViewModel();
+            }                
+        }
     }
+
 }
-
-
-
-
-
-
-
-    
-
