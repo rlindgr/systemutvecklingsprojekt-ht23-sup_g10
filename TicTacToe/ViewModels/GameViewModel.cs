@@ -33,7 +33,7 @@ namespace TicTacToe.ViewModels
         public static readonly string PlayerX = "X";
         public static readonly string PlayerO = "O";
 
-        public ICommand OpenSettingsCommand { get; set; }
+
         public ICommand ResetWinsCommand { get; }
         public ICommand CellClickCommand { get; set; }
         public ICommand MainMenuCommand { get; private set; }
@@ -52,14 +52,11 @@ namespace TicTacToe.ViewModels
                 if (value >= 0.0 && value <= 1.0)
                 {
                     _volume = value;
-                    // Om du har en PropertyChanged-event, trigga den här.
-                    // PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Volume)));
                 }
             }
         }
 
-        //public GameSettingsViewModel gameSettings;
-        //// Konstruktor som kallas när en ny instans av GameViewModel skapas.
+
 
         public GameViewModel()
         {
@@ -76,8 +73,7 @@ namespace TicTacToe.ViewModels
             /*InitializeGame();*/
 
             // Skapar en ny ObservableCollection och fyller den med 25 Cell-objekt, initialt satta till "-".
-            ResetWinsCommand = new RelayCommand(obj => ResetWins());
-            OpenSettingsCommand = new RelayCommand(OpenSettingsExecute);
+            ResetWinsCommand = new RelayCommand(obj => ResetWins());         
             MainMenuCommand = new RelayCommand(x => MainMenu());
 
         }
@@ -97,13 +93,11 @@ namespace TicTacToe.ViewModels
 
         public void InitializeGame()
         {
-            //var MainMenuView = new MainMenuView();
-            //if (MainMenuView.ShowDialog() == true)
-            
+ 
                 _isComputerOpponent = GameSettings.IsComputerOpponent;
                 _winLength = GameSettings.WinLength;
                 _algorithmType = GameSettings.Algorithm;
-                // Resten av koden för att initialisera spelet
+               
                 Random random = new Random();
                 int whoStarts = random.Next(0, 2);
                 string startingPlayerMessage;
@@ -131,17 +125,10 @@ namespace TicTacToe.ViewModels
                 FirstMoveAnnouncer announcer = new FirstMoveAnnouncer(startingPlayerMessage);
                 announcer.Show();
             
-            //else
-            //{
-            //    string invalidInput = "Inget val gjordes. Spelet avslutas!";
-            //    InvalidInput invalidInputBox = new InvalidInput(invalidInput);
-            //    invalidInputBox.ShowDialog();
-            //}
         }
 
         public void ShowStartingPlayer(string startingPlayer)
-        {
-            // Visar en dialogruta (eller vilken typ av UI-komponent du föredrar)
+        {          
             FirstMoveAnnouncer firstMoveAnnouncement = new FirstMoveAnnouncer(startingPlayer);
             firstMoveAnnouncement.ShowDialog();
         }
@@ -223,10 +210,6 @@ namespace TicTacToe.ViewModels
         }
 
 
-        private void OpenSettingsExecute(object obj)
-        {
-            ShowMainMenu();
-        }
 
         public void CellClick(object cellObj)
         {
@@ -317,32 +300,6 @@ namespace TicTacToe.ViewModels
             }
         }
 
-
-
-        private void ShowMainMenu()
-        {
-
-            // Här kan du bestämma vilken text som ska visas
-            string displayText = "Vill du gå till huvudmenyn?";
-
-            // Skapa ett nytt MainMenuClick-fönster och visa det
-            MainMenuClick mainMenuClick = new MainMenuClick(displayText);
-            mainMenuClick.ShowDialog();
-
-            // Hantera användarens val
-            if (mainMenuClick.Result == MessageBoxResult.Yes)
-            {
-
-                ResetBoard();
-                ResetWins();
-                InitializeGame(); // Starta om spelet med samma inställningar som tidigare (svårighetsgrad, antal i rad)
-            }
-            else
-            {
-                // Gör något annat (t.ex. stänga programmet) när användaren klickar på "Avsluta" eller motsvarande
-
-            }
-        }
 
         private void EndGame(string displayMessage)
         {
@@ -705,7 +662,20 @@ namespace TicTacToe.ViewModels
         }
         private void MainMenu()
         {
-            MainViewModel.Instance.CurrentViewModel = new MainMenuViewModel();
+          
+             // Här kan du bestämma vilken text som ska visas
+            string displayText = "Vill du gå till huvudmenyn?";
+
+            // Skapa ett nytt MainMenuClick-fönster och visa det
+            MainMenuClick mainMenuClick = new MainMenuClick(displayText);
+            mainMenuClick.ShowDialog();
+
+            // Hantera användarens val
+            if (mainMenuClick.Result == MessageBoxResult.Yes)
+            {
+
+                MainViewModel.Instance.CurrentViewModel = new MainMenuViewModel();
+            }                
         }
     }
 
