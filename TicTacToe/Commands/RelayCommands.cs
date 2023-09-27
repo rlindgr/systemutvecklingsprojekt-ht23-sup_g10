@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace FiveInARow
+namespace TicTacToe.Commands
 {
-    // RelayCommand är en klass som implementerar ICommand,
-    // vilket gör att man binda kommandon i WPF-applikationen
     public class RelayCommand : ICommand
     {
         // En privat delegat (pekare) till en metod som tar en parameter av typen object och returnerar ingenting.

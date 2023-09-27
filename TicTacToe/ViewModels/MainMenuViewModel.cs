@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using TicTacToe.Commands;
 using TicTacToe.Enums;
 using TicTacToe.Models;
 using TicTacToe.Settings;
@@ -20,6 +21,7 @@ namespace TicTacToe.ViewModels
         public static int WinLength { get; private set; }
         public static Algorithm Algorithm { get; set; }
         public ICommand StartGameCommand { get; private set; }
+        
         public MainMenuViewModel()
         {
             AlgorithmOptions = Enum.GetValues(typeof(Algorithm)).Cast<Algorithm>().ToList();
@@ -129,6 +131,7 @@ namespace TicTacToe.ViewModels
         {
             MainViewModel.Instance.CurrentViewModel = new GameViewModel();
         }
+       
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

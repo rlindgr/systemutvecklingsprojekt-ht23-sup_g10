@@ -13,6 +13,7 @@ using TicTacToe.Settings;
 using TicTacToe.Views;
 using YourNamespace;
 using TicTacToe.Models;
+using TicTacToe.Commands;
 
 namespace TicTacToe.ViewModels
 {
@@ -35,6 +36,7 @@ namespace TicTacToe.ViewModels
         public ICommand OpenSettingsCommand { get; set; }
         public ICommand ResetWinsCommand { get; }
         public ICommand CellClickCommand { get; set; }
+        public ICommand MainMenuCommand { get; private set; }
 
 
         // En ObservableCollection av Cell-objekt som representerar varje cell i spelbrädet.
@@ -76,6 +78,7 @@ namespace TicTacToe.ViewModels
             // Skapar en ny ObservableCollection och fyller den med 25 Cell-objekt, initialt satta till "-".
             ResetWinsCommand = new RelayCommand(obj => ResetWins());
             OpenSettingsCommand = new RelayCommand(OpenSettingsExecute);
+            MainMenuCommand = new RelayCommand(x => MainMenu());
 
         }
 
@@ -699,6 +702,10 @@ namespace TicTacToe.ViewModels
             }
 
             return null;
+        }
+        private void MainMenu()
+        {
+            MainViewModel.Instance.CurrentViewModel = new MainMenuViewModel();
         }
     }
 

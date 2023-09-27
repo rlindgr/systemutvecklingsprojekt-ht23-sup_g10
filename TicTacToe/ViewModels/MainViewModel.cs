@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using TicTacToe.Commands;
 using TicTacToe.Models;
 using TicTacToe.Settings;
 
