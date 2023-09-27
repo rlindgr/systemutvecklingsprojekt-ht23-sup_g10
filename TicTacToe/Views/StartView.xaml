@@ -26,8 +26,8 @@
                 <TextBlock Text="Spela mot en Vän eller mot Datorn" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="#8B4513"/>
                 <StackPanel Orientation="Horizontal" Height="36"  HorizontalAlignment="Center">
 
-                    <RadioButton Content="Vän" x:Name="radioButtonHuman" FontSize="24" Margin="0,0,30,0" IsChecked="{Binding HumanSelected,Mode=TwoWay}"/>
-                    <RadioButton Content="Datorn" x:Name="radioButtonComputer" FontSize="24" IsChecked="{Binding ComputerSelected, Mode=TwoWay}"/>
+                    <RadioButton Content="Vän" x:Name="radioButtonHuman" FontSize="24" Margin="0,0,30,0" IsChecked="{Binding HumanSelected,Mode=TwoWay}" Checked="radioButtonHuman_Checked"/>
+                    <RadioButton Content="Datorn" x:Name="radioButtonComputer" FontSize="24" IsChecked="{Binding ComputerSelected, Mode=TwoWay}" Checked="radioButtonComputer_Checked"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -42,15 +42,7 @@
           Width="200"
           FontSize="24"
           Cursor="Hand">
-                    <ComboBox.Style>
-                        <Style TargetType="ComboBox">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsComputerSelected}" Value="True">
-                                    <Setter Property="IsEnabled" Value="False" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ComboBox.Style>
+                    
                 </ComboBox>
 
 

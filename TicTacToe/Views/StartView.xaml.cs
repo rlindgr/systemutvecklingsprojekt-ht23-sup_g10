@@ -23,6 +23,30 @@ namespace TicTacToe.Views
         public StartView()
         {
             InitializeComponent();
+            radioButtonComputer.IsChecked = true;
+        }
+
+
+        private void radioButtonHuman_Checked(object sender, RoutedEventArgs e)
+        {
+            if (radioButtonHuman.IsChecked == true)
+            {
+                txtBlockDifficulty.Opacity = 0.2;
+                cmbBoxDifficulty.IsEnabled = false;
+                cmbBoxDifficulty.Opacity = 0.2;
+            }
+
+        }
+
+        private void radioButtonComputer_Checked(object sender, RoutedEventArgs e)
+        {
+            if (radioButtonComputer.IsChecked == true)
+            {
+                txtBlockDifficulty.Opacity = 1.0;
+                cmbBoxDifficulty.IsEnabled = true;
+                cmbBoxDifficulty.Opacity = 1.0;
+            }
+
         }
     }
 }
