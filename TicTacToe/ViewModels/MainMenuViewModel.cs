@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using TicTacToe.Enums;
+using TicTacToe.Models;
 using TicTacToe.Settings;
 
 namespace TicTacToe.ViewModels

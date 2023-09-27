@@ -12,6 +12,7 @@ using TicTacToe.Enums;
 using TicTacToe.Settings;
 using TicTacToe.Views;
 using YourNamespace;
+using TicTacToe.Models;
 
 namespace TicTacToe.ViewModels
 {

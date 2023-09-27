@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TicTacToe.Models
 {
-    class BaseViewModel : INotifyPropertyChanged
+    public class BaseViewModel : INotifyPropertyChanged
     {
         // Händelse som används när en property ändras.
         public event PropertyChangedEventHandler PropertyChanged;
