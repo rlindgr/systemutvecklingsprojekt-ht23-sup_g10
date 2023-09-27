@@ -20,6 +20,8 @@ namespace TicTacToe.Views
     /// </summary>
     public partial class StartView : UserControl
     {
+
+
         public StartView()
         {
             InitializeComponent();

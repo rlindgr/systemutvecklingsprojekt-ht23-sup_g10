@@ -20,6 +20,8 @@ namespace TicTacToe.ViewModels
         {
          ChangeGameCommand = new RelayCommand(page => ChangePage());
         }
+
+
         private void ChangePage()
         {
             CurrentViewModel = new GameViewModel();
