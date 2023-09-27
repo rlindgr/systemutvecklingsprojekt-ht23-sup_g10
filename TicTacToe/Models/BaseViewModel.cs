@@ -1,15 +1,14 @@
-﻿// Namespace som innehåller alla klasser för projektet "FiveInARow".
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace FiveInARow
+namespace TicTacToe.Models
 {
-    // BaseViewModel implementerar INotifyPropertyChanged för att kunna 
-    // meddela när en egenskap (property) ändras. Detta är viktigt för 
-    // data bindning i WPF, för att uppdatera UI när modellens data ändras.
-    public class BaseViewModel : INotifyPropertyChanged
-    {       
-
-       
+    class BaseViewModel : INotifyPropertyChanged
+    {
         // Händelse som används när en property ändras.
         public event PropertyChangedEventHandler PropertyChanged;
 

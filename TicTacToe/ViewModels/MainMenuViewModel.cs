@@ -14,6 +14,7 @@ namespace TicTacToe.ViewModels
 {
     public partial class MainMenuViewModel: BaseViewModel
     {
+        
         public static bool IsComputerOpponent { get; set; }
         public static int WinLength { get; private set; }
         public static Algorithm Algorithm { get; set; }
@@ -25,7 +26,7 @@ namespace TicTacToe.ViewModels
             WinLengthOptions = new List<int> { 3, 4, 5 };
 
             //IsComputerOpponent = GameSettings.IsComputerOpponent;
-            StartGameCommand = new RelayCommand(StartGame);
+            StartGameCommand = new RelayCommand(x => StartGame());
         } 
         public List<int> WinLengthOptions { get; }
         private int _selectedWinLength;
@@ -83,6 +84,34 @@ namespace TicTacToe.ViewModels
             }
         }
 
+        private bool _computerSelected;
+        private bool _humanSelected;
+        public bool ComputerSelected
+        {
+            get { return _computerSelected; }
+            set
+            {
+                if (_computerSelected != value)
+                {
+                    _computerSelected = value;
+                    OnPropertyChanged(nameof(ComputerSelected));
+                }
+            }
+        }
+        public bool HumanSelected
+        {
+            get { return _humanSelected; }
+            set
+            {
+                if (_humanSelected != value)
+                {
+                    _computerSelected = value;
+                    OnPropertyChanged(nameof(HumanSelected));
+                }
+            }
+        }
+
+
         public static void UpdateWinLenght()
         {
             GameSettings.WinLength = WinLength;
@@ -100,11 +129,16 @@ namespace TicTacToe.ViewModels
         public delegate void StartGameEventHandler(object sender, EventArgs e);
         public event StartGameEventHandler OnStartGame;
         public event PropertyChangedEventHandler PropertyChanged;
-        private void StartGame(object obj)
+        //private void StartGame(object obj)
+        //{
+        //    // ... Andra kontroller och logik ...
+        //    // Om allt är ok, trigga eventet.
+        //    OnStartGame?.Invoke(this, EventArgs.Empty);
+        //}
+
+        private void StartGame()
         {
-            // ... Andra kontroller och logik ...
-            // Om allt är ok, trigga eventet.
-            OnStartGame?.Invoke(this, EventArgs.Empty);
+            MainViewModel.Instance.CurrentViewModel = new GameViewModel();
         }
         protected virtual void OnPropertyChanged(string propertyName)
         {

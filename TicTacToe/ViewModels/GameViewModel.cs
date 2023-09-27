@@ -1,27 +1,26 @@
-﻿using System;
-using System.Collections.Generic; // Importera för List<T>
+﻿using FiveInARow;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
-using System.Collections.ObjectModel; // För ObservableCollection  
-using System.Windows; // För MessageBox och andra WPF-komponenter
-using System.Windows.Input;//För Icommand   
-using YourNamespace;
-using TicTacToe;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Input;
 using System.Windows.Media;
-using TicTacToe.Views;
-using System.ComponentModel;
-using TicTacToe.ViewModels;
-using TicTacToe.Settings;
+using System.Windows;
 using TicTacToe.Enums;
-using System.Threading.Channels;
+using TicTacToe.Settings;
+using TicTacToe.Views;
+using YourNamespace;
 
-namespace FiveInARow // Namn på projektet
+namespace TicTacToe.ViewModels
 {
-
-    public class GameViewModel: BaseViewModel
+    class GameViewModel: BaseViewModel
     {
         private static bool _isComputerOpponent = GameSettings.IsComputerOpponent;
         private static int _winLength = GameSettings.WinLength;
         private static Algorithm _algorithmType = GameSettings.Algorithm;
+
 
         public bool IsPlayerXTurn;
         public string CurrentPlayer { get; set; }
@@ -35,11 +34,11 @@ namespace FiveInARow // Namn på projektet
         public ICommand OpenSettingsCommand { get; set; }
         public ICommand ResetWinsCommand { get; }
         public ICommand CellClickCommand { get; set; }
-      
-       
+
+
         // En ObservableCollection av Cell-objekt som representerar varje cell i spelbrädet.
-        public ObservableCollection<Cell> Cells { get; set; } 
-       
+        public ObservableCollection<Cell> Cells { get; set; }
+
         private double _volume = 0.5; // Standardvolymen är satt till 0.5
 
         public double Volume
@@ -66,17 +65,17 @@ namespace FiveInARow // Namn på projektet
             {
                 Cells.Add(new Cell { Value = Cell.emptyCell });
             }
-          InitializeGame();
+            InitializeGame();
 
             // Binder CellClickCommand till CellClick-metoden så att den anropas när en cell klickas på.
             CellClickCommand = new RelayCommand(CellClick);
             // Anropar metoden för att initialisera spelet (visar upp dialogrutan där användaren väljer inställningar).
-            /*InitializeGame();*/ 
+            /*InitializeGame();*/
 
             // Skapar en ny ObservableCollection och fyller den med 25 Cell-objekt, initialt satta till "-".
             ResetWinsCommand = new RelayCommand(obj => ResetWins());
             OpenSettingsCommand = new RelayCommand(OpenSettingsExecute);
-           
+
         }
 
         public string ChangeCurrentPlayer()
@@ -88,26 +87,26 @@ namespace FiveInARow // Namn på projektet
             }
             else
             {
-              return CurrentPlayer = PlayerX;
+                return CurrentPlayer = PlayerX;
             }
         }
 
         public void InitializeGame()
         {
-            var MainMenuView = new MainMenuView();
-            if (MainMenuView.ShowDialog() == true)
-            {
-               _isComputerOpponent = GameSettings.IsComputerOpponent;
-               _winLength = GameSettings.WinLength;
-               _algorithmType = GameSettings.Algorithm;
-               // Resten av koden för att initialisera spelet
+            //var MainMenuView = new MainMenuView();
+            //if (MainMenuView.ShowDialog() == true)
+            
+                _isComputerOpponent = GameSettings.IsComputerOpponent;
+                _winLength = GameSettings.WinLength;
+                _algorithmType = GameSettings.Algorithm;
+                // Resten av koden för att initialisera spelet
                 Random random = new Random();
                 int whoStarts = random.Next(0, 2);
                 string startingPlayerMessage;
 
                 if (whoStarts == 0)
                 {
-                    
+
                     CurrentPlayer = PlayerX;
                     startingPlayerMessage = "Spelare 1 börjar spelet";
                 }
@@ -127,17 +126,17 @@ namespace FiveInARow // Namn på projektet
 
                 FirstMoveAnnouncer announcer = new FirstMoveAnnouncer(startingPlayerMessage);
                 announcer.Show();
-            }
-            else
-            {
-                string invalidInput = "Inget val gjordes. Spelet avslutas!";
-                InvalidInput invalidInputBox = new InvalidInput(invalidInput);
-                invalidInputBox.ShowDialog();
-            }
+            
+            //else
+            //{
+            //    string invalidInput = "Inget val gjordes. Spelet avslutas!";
+            //    InvalidInput invalidInputBox = new InvalidInput(invalidInput);
+            //    invalidInputBox.ShowDialog();
+            //}
         }
 
         public void ShowStartingPlayer(string startingPlayer)
-        {        
+        {
             // Visar en dialogruta (eller vilken typ av UI-komponent du föredrar)
             FirstMoveAnnouncer firstMoveAnnouncement = new FirstMoveAnnouncer(startingPlayer);
             firstMoveAnnouncement.ShowDialog();
@@ -155,7 +154,7 @@ namespace FiveInARow // Namn på projektet
             // Slumpmässigt avgör vem som börjar
             Random random = new Random();
             int whoStarts = random.Next(0, 2);
-       
+
 
             // Meddelande om vem som börjar
             string startingPlayerMessage;
@@ -178,7 +177,7 @@ namespace FiveInARow // Namn på projektet
                     CurrentPlayer = PlayerO;
                     startingPlayerMessage = "Datorn börjar spelet";
                     DoComputerMove(PlayerO);
-                    ChangeCurrentPlayer();                   
+                    ChangeCurrentPlayer();
                 }
             }
 
@@ -221,7 +220,7 @@ namespace FiveInARow // Namn på projektet
 
 
         private void OpenSettingsExecute(object obj)
-        {          
+        {
             ShowMainMenu();
         }
 
@@ -308,9 +307,9 @@ namespace FiveInARow // Namn på projektet
                         return;
                     }
 
-                   ChangeCurrentPlayer();
+                    ChangeCurrentPlayer();
                 }
-                
+
             }
         }
 
@@ -318,7 +317,7 @@ namespace FiveInARow // Namn på projektet
 
         private void ShowMainMenu()
         {
-            
+
             // Här kan du bestämma vilken text som ska visas
             string displayText = "Vill du gå till huvudmenyn?";
 
@@ -329,15 +328,15 @@ namespace FiveInARow // Namn på projektet
             // Hantera användarens val
             if (mainMenuClick.Result == MessageBoxResult.Yes)
             {
-              
+
                 ResetBoard();
-                ResetWins();           
+                ResetWins();
                 InitializeGame(); // Starta om spelet med samma inställningar som tidigare (svårighetsgrad, antal i rad)
             }
             else
             {
                 // Gör något annat (t.ex. stänga programmet) när användaren klickar på "Avsluta" eller motsvarande
-                
+
             }
         }
 
@@ -415,7 +414,7 @@ namespace FiveInARow // Namn på projektet
                        )
                     {
                         return true; // Returnerar true om en vinst har hittats
-                   
+
                     }
 
                 }
@@ -457,8 +456,8 @@ namespace FiveInARow // Namn på projektet
         private void DoComputerMove(string mark)
         {
             Random random = new Random();
- 
-           
+
+
             if (_algorithmType == Algorithm.Lätt)
             {
                 foreach (var cell in Cells)
@@ -489,7 +488,7 @@ namespace FiveInARow // Namn på projektet
                 // Kontrollerar om det finns några lediga celler
                 if (availableCells.Any())
                 {
-                    
+
                     // Väljer en slumpmässig cell från listan av tillgängliga celler
                     int index = random.Next(availableCells.Count);
                     Cell randomCell = availableCells[index];
@@ -699,15 +698,7 @@ namespace FiveInARow // Namn på projektet
             }
 
             return null;
-        }                
+        }
     }
+
 }
-
-
-
-
-
-
-
-    
-

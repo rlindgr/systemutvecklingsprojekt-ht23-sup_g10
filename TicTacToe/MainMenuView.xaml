@@ -9,9 +9,7 @@
         Title="Välj motståndare" Height="511" Width="861"
         Cursor="Hand"
         Background="#F5ECD4">
-    <Window.DataContext>
-        <vm:MainMenuViewModel/>
-    </Window.DataContext>
+    
     <Window.Resources>
         <local:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
     </Window.Resources>
@@ -37,15 +35,15 @@
             <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <TextBlock x:Name="txtBlockDifficulty" Text="Svårighetsnivå" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="#8B4513"/>
                 <ComboBox x:Name="cmbBoxDifficulty"
-    ItemsSource="{Binding AlgorithmOptions}" 
-    SelectedItem="{Binding SelectedAlgorithm}"
-    DisplayMemberPath="."
-    VerticalAlignment="Center"
-    HorizontalAlignment="Center"
-    Height="40"
-    Width="200"
-    FontSize="24"
-    Cursor="Hand"/>
+                    ItemsSource="{Binding AlgorithmOptions}" 
+                    SelectedItem="{Binding SelectedAlgorithm}"
+                    DisplayMemberPath="."
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Height="40"
+                    Width="200"
+                    FontSize="24"
+                    Cursor="Hand"/>
 
 
             </StackPanel>

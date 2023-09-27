@@ -4,18 +4,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using TicTacToe.Settings;
 
 namespace TicTacToe.ViewModels
 {
-    internal class MainViewModel:BaseViewModel
+    internal sealed class MainViewModel:BaseViewModel
     {
-        //gör props för WinLength, IsComputerOpponent, AlgorithmType
-        //1. tilldela värden till GameSettings
-        //2. Byt vy till starta spelet (GameViewModel)
+       private static MainViewModel? _instance;
+        public BaseViewModel CurrentViewModel { get; set; } = new MainMenuViewModel();
+        public static MainViewModel Instance { get => _instance ?? (_instance = new MainViewModel()); }
+        public ICommand ChangeGameCommand { get; }
         public MainViewModel()
         {
-         
+         ChangeGameCommand = new RelayCommand(page => ChangePage());
+        }
+        private void ChangePage()
+        {
+            CurrentViewModel = new GameViewModel();
         }
     }
 }
