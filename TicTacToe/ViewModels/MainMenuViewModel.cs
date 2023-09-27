@@ -27,8 +27,6 @@ namespace TicTacToe.ViewModels
             AlgorithmOptions = Enum.GetValues(typeof(Algorithm)).Cast<Algorithm>().ToList();
             SelectedAlgorithm = GameSettings.Algorithm;
             WinLengthOptions = new List<int> { 3, 4, 5 };
-
-            //IsComputerOpponent = GameSettings.IsComputerOpponent;
             StartGameCommand = new RelayCommand(x => StartGame());
         } 
         public List<int> WinLengthOptions { get; }
@@ -120,12 +118,7 @@ namespace TicTacToe.ViewModels
         public delegate void StartGameEventHandler(object sender, EventArgs e);
         public event StartGameEventHandler OnStartGame;
         public event PropertyChangedEventHandler PropertyChanged;
-        //private void StartGame(object obj)
-        //{
-        //    // ... Andra kontroller och logik ...
-        //    // Om allt är ok, trigga eventet.
-        //    OnStartGame?.Invoke(this, EventArgs.Empty);
-        //}
+
 
         private void StartGame()
         {
