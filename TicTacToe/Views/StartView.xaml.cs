@@ -24,6 +24,7 @@ namespace TicTacToe.Views
         {
             InitializeComponent();
             radioButtonComputer.IsChecked = true;
+            WinLengthComboBox.SelectedItem = 3;
         }
 
 

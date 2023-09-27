@@ -52,8 +52,8 @@
                 </TextBlock>
 
 
-                <Button Content="Main Menu" Grid.Column="2" HorizontalAlignment="Left" Command="{Binding MainMenuCommand}" Style="{StaticResource CustomButtonStyle}" Margin="107,10,0,10" />
-                <Button Content="Reset Score" Grid.Column="2" HorizontalAlignment="Left" Command="{Binding ResetWinsCommand}" Style="{StaticResource CustomButtonStyle}" Margin="303,10,0,10" />
+                <Button Content="Huvudmeny" Grid.Column="2" HorizontalAlignment="Left" Command="{Binding MainMenuCommand}" Style="{StaticResource CustomButtonStyle}" Margin="107,10,0,10" />
+                <Button Content="Nollställ" Grid.Column="2" HorizontalAlignment="Left" Command="{Binding ResetWinsCommand}" Style="{StaticResource CustomButtonStyle}" Margin="303,10,0,10" />
 
                 <Grid Grid.Column="4" VerticalAlignment="Center">
                     <Grid.RowDefinitions>

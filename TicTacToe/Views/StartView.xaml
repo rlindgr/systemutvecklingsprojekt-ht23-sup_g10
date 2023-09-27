@@ -57,7 +57,7 @@
                         Foreground="White" Command="{Binding StartGameCommand}" />
                 </StackPanel>
             </StackPanel>
-        <TextBox Background="#D4BF9D" Foreground="#FF00FF" HorizontalAlignment="Left" Height="91" Margin="0,-68,0,0" TextWrapping="Wrap" Text="Luffarschack" VerticalAlignment="Top" Width="462" FontFamily="Kristen ITC" FontSize="48" TextAlignment="Center" FontWeight="Bold"/>
+        <TextBox Background="#D4BF9D" Foreground="#8B4513" HorizontalAlignment="Left" Height="91" Margin="0,-68,0,0" TextWrapping="Wrap" Text="Luffarschack" VerticalAlignment="Top" Width="462" FontFamily="Kristen ITC" FontSize="48" TextAlignment="Center" FontWeight="Bold"/>
         </Grid>
 
     
