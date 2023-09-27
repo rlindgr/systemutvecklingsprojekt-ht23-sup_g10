@@ -67,46 +67,34 @@ namespace TicTacToe.ViewModels
         }
 
         
-        private bool _selectedOpponent;
-        public bool SelectedOpponent
-        {
-
-            get => _selectedOpponent; 
-            set
-            {
-                if (_selectedOpponent != value)
-                {
-                    _selectedOpponent = value;
-                    IsComputerOpponent = !_selectedOpponent;
-                    OnPropertyChanged(nameof(SelectedOpponent));
-                    UpdateOpponent();
-                }
-            }
-        }
 
         private bool _computerSelected;
         private bool _humanSelected;
         public bool ComputerSelected
         {
-            get { return _computerSelected; }
+            get => _computerSelected; 
             set
             {
                 if (_computerSelected != value)
                 {
                     _computerSelected = value;
+                    IsComputerOpponent = _computerSelected;
                     OnPropertyChanged(nameof(ComputerSelected));
+                    UpdateOpponent();
                 }
             }
         }
         public bool HumanSelected
         {
-            get { return _humanSelected; }
+            get => _humanSelected; 
             set
             {
                 if (_humanSelected != value)
                 {
-                    _computerSelected = value;
+                    _humanSelected = value;
+                    IsComputerOpponent = !_humanSelected;
                     OnPropertyChanged(nameof(HumanSelected));
+                    UpdateOpponent();
                 }
             }
         }
