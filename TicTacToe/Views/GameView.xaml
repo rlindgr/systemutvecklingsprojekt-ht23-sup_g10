@@ -33,7 +33,7 @@
 
             <!-- StackPanel för volym -->
             <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
-                <Image Source="C:\Users\eriks\source\repos\TicTacToe\TicTacToe\103711_louder_speaker_icon.png" Width="24" Height="24"/>
+                <Image Source="103711_louder_speaker_icon.png" Width="24" Height="24"/>
                 <Slider Minimum="0" Maximum="1" Value="{Binding Volume}" Width="100" Height="20"/>
             </StackPanel>
 
